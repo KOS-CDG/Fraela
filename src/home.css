@@ -1,0 +1,93 @@
+.edition {
+  display: grid;
+  align-content: center;
+  gap: clamp(1.25rem, 3.5vh, 3.25rem);
+  width: min(100%, 88rem);
+  min-height: 100svh;
+  margin: auto;
+  padding: clamp(1rem, 5vw, 5rem);
+}
+.edition-heading { border-top: 1px solid currentColor; }
+.edition-heading p {
+  margin: clamp(0.65rem, 2vh, 1.25rem) 0 0.65rem;
+  font-size: 0.69rem;
+  font-weight: 650;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.edition-heading h1 {
+  margin: 0;
+  font: 400 clamp(4.1rem, 9.2vw, 9rem)/0.83 var(--serif);
+  letter-spacing: -0.045em;
+}
+.edition-heading em { color: var(--mulberry); }
+.mobile-break { display: none; }
+.year-select { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(0.75rem, 2.35vw, 2.2rem); }
+.year { display: block; text-decoration: none; min-width: 0; }
+.year-art {
+  position: relative;
+  display: grid;
+  isolation: isolate;
+  align-items: end;
+  min-height: clamp(11rem, 35vh, 23rem);
+  overflow: hidden;
+  padding: 0.7rem clamp(0.9rem, 2.8vw, 2.3rem);
+}
+.year-art > span:last-child {
+  position: relative;
+  width: fit-content;
+  z-index: 1;
+  font: 400 clamp(5.5rem, 10vw, 11rem)/0.82 var(--serif);
+  letter-spacing: -0.065em;
+}
+.year-archive .year-art { background: var(--plum); color: var(--lavender); }
+.year-archive .year-art::after {
+  position: absolute;
+  z-index: 0;
+  inset: auto 0 0;
+  height: 34%;
+  content: '';
+  background: var(--plum);
+}
+.year-art img { position: absolute; inset: 0 0 auto; width: 100%; height: 74%; object-fit: cover; object-position: center 54%; }
+.year-story .year-art {
+  align-items: center;
+  justify-items: center;
+  background: var(--pale-pink);
+  color: var(--plum);
+}
+.cover-rings {
+  position: absolute;
+  inset: 9% 9%;
+  border: 1px solid var(--berry);
+  border-radius: 50%;
+}
+.cover-rings::before, .cover-rings::after {
+  position: absolute;
+  inset: 9% -7%;
+  border: 1px solid var(--dusty-rose);
+  border-radius: 50%;
+  content: '';
+}
+.cover-rings::after { inset: -8% 9%; }
+.year-caption {
+  display: flex;
+  min-height: 2.85rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  border-bottom: 1px solid currentColor;
+  font-size: clamp(0.8rem, 1.1vw, 0.96rem);
+  font-weight: 600;
+}
+.year:hover .year-caption { color: var(--mulberry); text-decoration: underline; text-underline-offset: 0.25em; }
+
+@media (max-width: 620px) {
+  .edition { gap: clamp(1.1rem, 3.3vh, 2rem); }
+  .edition-heading h1 { font-size: clamp(3.4rem, 13.3vw, 5.25rem); line-height: 0.89; }
+  .mobile-break { display: initial; }
+  .year-select { grid-template-columns: 1fr; gap: 0.85rem; }
+  .year-art { min-height: clamp(6.7rem, 19svh, 10rem); }
+  .year-art > span:last-child { font-size: clamp(4.1rem, 17vw, 5.7rem); }
+  .year-caption { min-height: 2.35rem; }
+}

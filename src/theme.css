@@ -1,0 +1,46 @@
+@import '@fontsource/instrument-serif/latin-400.css';
+@import '@fontsource/instrument-serif/latin-400-italic.css';
+@import '@fontsource-variable/dm-sans/wght.css';
+
+:root {
+  color-scheme: light;
+  --magenta: #D6006F;
+  --orchid: #9A59B5;
+  --lilac: #E9B8E6;
+  --lavender: #F6E6F6;
+  --plum: #6C3482;
+  --purple: #7F007F;
+  --mulberry: #9C2B88;
+  --berry: #B4498F;
+  --dusty-rose: #CC669B;
+  --rose: #DE84A7;
+  --blush: #F0A1B7;
+  --pale-pink: #FFC0CA;
+  --serif: 'Instrument Serif', Georgia, serif;
+  --sans: 'DM Sans Variable', 'Trebuchet MS', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; background: var(--lavender); color: var(--plum); font-family: var(--sans); }
+a { color: inherit; }
+button { font: inherit; }
+a:focus-visible, button:focus-visible, video:focus-visible { outline: 3px solid currentColor; outline-offset: 5px; }
+
+.arrow {
+  position: relative;
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  flex: 0 0 auto;
+}
+.arrow::before, .arrow::after { content: ''; position: absolute; }
+.arrow::before { width: 80%; height: 1px; top: 50%; left: 0; background: currentColor; }
+.arrow::after {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-top: 1px solid;
+  border-right: 1px solid;
+  top: 50%;
+  right: 20%;
+  transform: translateY(-50%) rotate(45deg);
+}

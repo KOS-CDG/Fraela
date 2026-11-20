@@ -1,0 +1,20 @@
+{
+  "name": "to-my-fairest-love",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@fontsource-variable/dm-sans": "5.2.8",
+    "@fontsource/instrument-serif": "5.3.0",
+    "gsap": "3.15.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.65.1",
+    "vite": "8.3.8"
+  }
+}

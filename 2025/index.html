@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>2025 · To My Fairest Love</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Romantic fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --main-purple: #9A59B5;
+      --lavender: #E9B8E6;
+      --accent-purple: #6C3482;
+      --soft-white: #F6E6F6;
+      --border-floral: #DE84A7;
+      --text-dark: #6C3482;
+      /* CHANGE ONLY THIS NAME TO SWAP THE BACKGROUND PHOTO */
+      --bg-photo-url: none;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Nunito', Arial, sans-serif;
+      color: var(--text-dark);
+      min-height: 100vh;
+      overflow-x: hidden;
+      background: #000;
+    }
+
+    /* CLEAR, FULL-COLOR BACKGROUND PHOTO */
+    .bg-blur {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      background-image: var(--bg-photo-url); /* uses the file from :root */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .content-shell {
+      min-height: 100vh;
+      /* no backdrop blur so the photo stays sharp */
+      background: #F6E6F6E8;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top bar */
+    .top-bar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 0.8rem;
+      background: #6C3482;
+      box-shadow: 0 2px 10px #8e6fd899;
+      border-bottom: 2px solid var(--border-floral);
+    }
+    .top-title {
+      font-family: 'Great Vibes', cursive;
+      font-size: 1.9rem;
+      color: var(--soft-white);
+      text-shadow: 0 1px 4px #5e35b1;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Main layout: content + right vertical menu */
+    .main-layout {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .page-wrapper {
+      flex: 1;
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 1.1rem 0.8rem 2.2rem 0.8rem;
+    }
+
+    .page {
+      display: none;
+      background: rgba(252,251,255,0.98);
+      border-radius: 26px;
+      border: 2px solid rgba(206,147,216,0.85);
+      box-shadow: 0 6px 22px #7e57c244;
+      padding: 1.7rem 1.4rem 1.9rem 1.4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .page.active {
+      display: block;
+    }
+    .page::before,
+    .page::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      background: #E9B8E6;
+      z-index: -1;
+    }
+    .page::before {
+      width: 260px;
+      height: 260px;
+      top: -130px;
+      right: -50px;
+    }
+    .page::after {
+      width: 220px;
+      height: 220px;
+      bottom: -120px;
+      left: -60px;
+    }
+
+    .page-heading {
+      font-family: 'Great Vibes', cursive;
+      font-size: 2.3rem;
+      color: var(--accent-purple);
+      text-align: center;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 1px 5px #e1bee7aa;
+    }
+    .sub-heading {
+      text-align: center;
+      font-size: 0.95rem;
+      color: #6a537f;
+      margin-bottom: 0.9rem;
+      font-style: italic;
+    }
+    .divider {
+      height: 3px;
+      border-radius: 999px;
+      background: #9A59B5;
+      width: 80%;
+      max-width: 380px;
+      margin: 0 auto 1rem auto;
+    }
+    p {
+      font-size: 0.98rem;
+      line-height: 1.8;
+      margin-bottom: 0.95rem;
+    }
+
+    /* Memory layout */
+    .memory-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr);
+      gap: 1rem;
+      align-items: start;
+    }
+    @media (min-width: 720px) {
+      .memory-layout {
+        grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      }
+    }
+
+    .memory-photo {
+      width: 100%;
+      max-width: 330px;
+      height: 440px; /* portrait-style frame for vertical photo */
+      margin: 0 auto;
+      border-radius: 22px;
+      border: 3px dashed var(--border-floral);
+      background: #E9B8E6;
+      box-shadow: 0 5px 20px #7e57c288;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      color: #f3e5f5;
+      position: relative;
+      overflow: hidden;
+    }
+    .memory-photo span.label {
+      position: absolute;
+      bottom: 6px;
+      right: 6px;
+      background: rgba(252,251,255,0.9);
+      color: var(--accent-purple);
+      font-size: 0.78rem;
+      padding: 0.25rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid var(--border-floral);
+    }
+    .memory-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .memory-caption {
+      font-style: italic;
+      font-size: 1.02rem;
+      margin-bottom: 0.5rem;
+    }
+    .memory-note {
+      font-size: 0.96rem;
+      background: rgba(209,196,233,0.35);
+      border-radius: 18px;
+      padding: 0.85rem 1rem;
+      border: 1px solid rgba(209,196,233,0.85);
+      margin-bottom: 0.6rem;
+    }
+
+    /* Reasons list */
+    .reasons-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      justify-content: center;
+      margin-top: 0.6rem;
+    }
+    .reason-card {
+      background: rgba(252,251,255,0.98);
+      border-radius: 18px;
+      border: 1.5px solid var(--border-floral);
+      padding: 0.8rem 1.15rem;
+      min-width: 170px;
+      max-width: 230px;
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      font-size: 0.95rem;
+      box-shadow: 0 3px 10px #ce93d8aa;
+    }
+    .reason-icon {
+      font-size: 1.3rem;
+    }
+
+    .centered {
+      text-align: center;
+    }
+
+    /* Secret surprise vertical video */
+    .video-frame {
+      max-width: 360px;
+      margin: 1rem auto 0 auto;
+    }
+    .video-vertical {
+      width: 100%;
+      aspect-ratio: 9 / 16; /* Vertical, phone style */
+      background: #000;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px #7e57c299;
+    }
+    .video-vertical video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Songs + verses styling */
+    .songs-layout {
+      display: grid;
+      gap: 1rem;
+      margin-top: 0.7rem;
+    }
+    .songs-list {
+      display: grid;
+      gap: 0.8rem;
+    }
+    .song-card {
+      background: rgba(248,246,255,0.98);
+      border-radius: 16px;
+      border: 1.5px solid rgba(206,147,216,0.85);
+      padding: 0.7rem 0.85rem 0.85rem 0.85rem;
+      box-shadow: 0 3px 9px #b39ddb88;
+    }
+    .song-info {
+      display: flex;
+      gap: 0.6rem;
+      align-items: flex-start;
+      margin-bottom: 0.4rem;
+    }
+    .song-number {
+      font-weight: 700;
+      color: var(--accent-purple);
+      margin-top: 0.1rem;
+    }
+    .song-title {
+      font-weight: 700;
+      font-size: 0.97rem;
+      color: #5e35b1;
+    }
+    .song-note {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+    .song-card audio {
+      width: 100%;
+      margin-top: 0.2rem;
+    }
+
+    .verses-list {
+      display: grid;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+    .verse-card {
+      background: rgba(252,251,255,0.98);
+      border-radius: 16px;
+      border: 1.5px dashed rgba(206,147,216,0.85);
+      padding: 0.75rem 0.9rem;
+      box-shadow: 0 2px 8px #d1c4e988;
+      font-size: 0.94rem;
+    }
+    .verse-ref {
+      font-weight: 700;
+      color: var(--accent-purple);
+      margin-bottom: 0.2rem;
+    }
+    .verse-text {
+      font-style: italic;
+    }
+
+    /* Right-side vertical navigation (phone friendly) */
+    .right-menu-toggle {
+      position: fixed;
+      right: 0.6rem;
+      bottom: 0.8rem;
+      z-index: 80;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: var(--accent-purple);
+      color: #fff;
+      border: 2px solid var(--soft-white);
+      box-shadow: 0 4px 14px #5e35b1aa;
+      cursor: pointer;
+      font-size: 1.4rem;
+    }
+
+    .right-menu {
+      position: fixed;
+      inset-block: 70px 0;
+      right: 0;
+      width: 230px;
+      background: rgba(248,246,255,0.97);
+      border-left: 2px solid var(--border-floral);
+      box-shadow: -4px 0 16px #7e57c288;
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+      z-index: 70;
+      display: flex;
+      flex-direction: column;
+    }
+    .right-menu.open {
+      transform: translateX(0);
+    }
+    .menu-title {
+      font-family: 'Great Vibes', cursive;
+      font-size: 1.6rem;
+      color: var(--accent-purple);
+      text-align: center;
+      padding: 0.7rem 0.5rem 0.4rem 0.5rem;
+      border-bottom: 1px solid rgba(206,147,216,0.7);
+    }
+    .nav-list {
+      list-style: none;
+      padding: 0.5rem 0.4rem 0.9rem 0.4rem;
+      margin: 0;
+      overflow-y: auto;
+    }
+    .nav-link {
+      width: 100%;
+      border-radius: 999px;
+      border: none;
+      padding: 0.55rem 0.9rem;
+      font-size: 0.95rem;
+      background: transparent;
+      color: var(--text-dark);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      margin-bottom: 0.15rem;
+      transition: 0.2s;
+      text-align: left;
+    }
+    .nav-link span.icon {
+      font-size: 1.15rem;
+      flex-shrink: 0;
+    }
+    .nav-link.active,
+    .nav-link:hover {
+      background: #6C3482;
+      color: #fff;
+      box-shadow: 0 2px 8px #9575cdcc;
+    }
+
+    /* Desktop: keep right menu always open, remove floating button */
+    @media (min-width: 860px) {
+      .main-layout {
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: center;
+      }
+      .page-wrapper {
+        width: calc(100% - 240px);
+        padding-right: 1.2rem;
+      }
+      .right-menu {
+        position: sticky;
+        inset-block: 70px auto;
+        height: calc(100vh - 70px);
+        transform: translateX(0);
+      }
+      .right-menu-toggle {
+        display: none;
+      }
+    }
+
+    /* Phone-friendly spacing */
+    @media (max-width: 600px) {
+      .page {
+        padding: 1.4rem 1.1rem 1.6rem 1.1rem;
+      }
+      .page-heading {
+        font-size: 1.9rem;
+      }
+      .top-title {
+        font-size: 1.6rem;
+      }
+    }
+    .right-menu-toggle::before {
+      content: "";
+      display: block;
+      width: 18px;
+      height: 12px;
+      border-block: 1px solid currentColor;
+      margin: auto;
+    }
+    .right-menu-toggle::after {
+      content: "";
+      position: absolute;
+      width: 18px;
+      height: 1px;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background: currentColor;
+    }
+    .archive-back { position: absolute; left: 0.8rem; color: var(--soft-white); font-size: 0.76rem; }
+    .top-title { padding-inline: 5rem; }
+    .memory-photo { height: auto; aspect-ratio: 4 / 3; }
+    .memory-photo img { object-fit: contain; }
+    :focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+  </style>
+</head>
+<body>
+  <div class="bg-blur" aria-hidden="true"></div>
+
+  <div class="content-shell">
+    <header class="top-bar">
+      <a class="archive-back" href="../">All years</a>
+      <div class="top-title">For My Fairest Lavender Rose</div>
+    </header>
+
+    <div class="main-layout">
+      <!-- Main pages area -->
+      <main class="page-wrapper">
+        <!-- HOME -->
+        <section class="page active" id="home">
+          <h1 class="page-heading">On Thy Most Blessed Day</h1>
+          <p class="sub-heading">“Under a gentle lavender sky, my heart did choose thee, and hath chosen thee with every sunrise since.”</p>
+          <div class="divider"></div>
+
+          <!-- SPECIAL SONG FOR THIS TAB -->
+          <div style="text-align:center; margin-bottom:1rem;">
+            <audio preload="none" id="homeSong" controls>
+              <source src="../archive-media/home-song.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+            </audio>
+          </div>
+
+          <p>
+           My dearest love, on this most cherished day of thy birth, the heavens themselves seem softer, as though every cloud were spun from the hush of thy laughter. The world grew kinder the moment thou cam’st into it, and my own life, once plain and quiet as unpainted parchment, burst into color the day our paths entwined.         
+          </p>
+          <p>
+            Thou art the calm after every storm, the secret song that hums beneath all noise, the bloom that turns each common hour into a field of spring. In thine eyes I find both my shelter and my greatest adventure, and in thy smile I read a thousand bright tomorrows yet to be.         
+          </p>
+          <p>
+            This small realm of lavender and light is fashioned as a humble offering to thy heart, a garden of our memories, our whispered hopes, our laughter echoing softly between the petals. Wander from tab to tab as though strolling through a moonlit orchard, and may each page remind thee that there is no corner of my soul where thy name is not tenderly written.         
+          </p>
+          <p>
+            As thou journeyest through these words and pictures, know that each line was shaped with thee in mind, like threads of silk drawn carefully through the loom of my affection. Here are the moments that changed my world with nothing more than a glance or a touch, and every memory speaketh softly of how thou hast taught my heart to be gentler, braver, and more kind.         
+          </p>
+          <p>
+            So, on this blessed day, when the world secretly rejoiceth that it was once given the gift of thee, I offer this little sanctuary of love as my birthday candle unto thy heart. May it remind thee, in quiet hours and busy ones, that there is one soul who counteth thee as his brightest mercy and greatest joy. And as the years roll on and new memories are born, may we ever return to this place, this simple garden of words and light, and remember that from the first page to the last, the story hath ever been the same: my heart, freely and forever, is thine.         
+          </p>
+        </section>
+
+        <!-- MEMORY 1 WITH VERTICAL PHOTO -->
+        <section class="page" id="memory1">
+          <h1 class="page-heading">When First Our Paths Did Cross</h1>
+          <p class="sub-heading">The first spark, when all that now is began as a quiet possibility.</p>
+          <div class="divider"></div>
+          <div class="memory-layout">
+            <div class="memory-photo">
+              <!-- Change only the file name below to your own vertical photo -->
+              <img src="../archive-media/first-meeting.jpg" alt="Our first meeting">
+              <span class="label">Our first photo together</span>
+            </div>
+            <div>
+              <p class="memory-caption">
+                In that gentle hour, ‘twixt shy glances and uncertain words, the world slipped softly out of focus and left only thee.
+              </p>
+              <p class="memory-note">
+               When first our eyes did meet, my heart was caught unwares, and joy ran through me like music newly found, a symphony I had never known in all my days before.
+In that small instant the world grew soft and distant, and some gentle light awoke within my soul, as though my very spirit rose to greet thee and learned a sweeter tune than ever it had sung.
+
+
+When we took our first fair picture by the library’s side, time itself seemed pleased to linger, watching us framed in tender stone and quiet air.
+That simple moment hath been graven deep upon my memory, a holy keepsake I return to when I would see thee clear again.
+
+
+There dwelleth now a special chamber in my heart wherein that day still breathes, untouched by dust or years;
+Whenever my thoughts grow weary, they wander back to that first glance and that first captured smile, and there they find thee waiting filling all my mind, my hope, my joy until I know anew that my life’s sweetest song began the day I looked on you.              
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- REASONS (REPLACED WITH DEAR FUTURE US) -->
+        <section class="page" id="reasons">
+          <h1 class="page-heading">Letters To Thee, And Years To Come</h1>
+          <p class="sub-heading">
+            Little missives my heart doth send into the days we have not walked yet, each one bearing thy name like a seal of gold.
+          </p>
+          <div class="divider"></div>
+          <p>
+            These are not reasons only, but quiet letters unto our future selves, writ in the ink of hope and bound with gentle prayer. 
+            As thou readest them, may thy heart remember that in every season yet unseen, my soul is reaching forth to walk beside thee still.
+          </p>
+          <div class="reasons-list">
+            <div class="reason-card">
+              <span class="reason-icon" aria-hidden="true">·</span>
+              To the us of tomorrow, I hope we still laugh too loud at our own foolish jests, and still choose each other first, even when we are weary and the day hath been unkind.
+            </div>
+            <div class="reason-card">
+              <span class="reason-icon" aria-hidden="true">·</span>
+              To the us of next year, may we look back on this tender day and smile, knowing that the love we hold now hath only deepened, and that every tear and trial hath drawn us closer still.
+            </div>
+            <div class="reason-card">
+              <span class="reason-icon" aria-hidden="true">·</span>
+              To the us of some far spring, may our faith be stronger, our patience softer, and our home a quiet haven where prayers and laughter twine together like vines in bloom.
+            </div>
+            <div class="reason-card">
+              <span class="reason-icon" aria-hidden="true">·</span>
+              To the us who have walked through many storms, may we yet be found hand in hand, choosing kindness over pride, forgiveness over hurt, and ever turning back toward one another when the road grows dark.
+            </div>
+            <div class="reason-card">
+              <span class="reason-icon" aria-hidden="true">·</span>
+              To the us with silver in our hair, may we still call each other “my love,” and thank God in hushed and holy tones for every year our hearts were granted side by side.
+            </div>
+            <div class="reason-card">
+              <span class="reason-icon" aria-hidden="true">·</span>
+              And to thee, wherever thou shalt be, know this certain truth my soul would carve in stone if it could: in every chapter my life is given, thy name shall ever be written as my sweetest line.
+            </div>
+          </div>
+        </section>
+
+        <!-- SONGS ONLY -->
+        <section class="page" id="songs">
+          <h1 class="page-heading">The Playlist of My Devoted Heart</h1>
+          <p class="sub-heading">
+            Melodies that carry pieces of our story, each note a little echo of us beneath a lavender sky.
+          </p>
+          <div class="divider"></div>
+          <p>
+           These songs are the secret diary of my heart, written not with ink but with melody. Each note gathereth the days we have walked together, the quiet smiles, the trembling fights, the soft forgiveness, and bindeth them into one gentle story of us. They remind me how thou turn’st my sorrows into light, my fears into courage, and my lonely hours into home, till every chorus soundeth like thy name and every verse declareth anew how deeply, endlessly, I am in love with thee.
+          </p>
+          
+          <div class="songs-layout">
+            <!-- SONG LIST -->
+            <div class="songs-list">
+              <!-- Song 1 -->
+              <article class="song-card">
+                <div class="song-info">
+                  <span class="song-number">1.</span>
+                  <div>
+                    <div class="song-title">“My Universe”</div>
+                    <div class="song-note">
+                     This is the song where thou becom’st my whole sky.
+When this bright anthem rings, I walk with thee ‘neath stars that seemed to bow before thy face.
+It bringeth back the nights wherein thy laughter turned my darkness into holy place.
+Each rising swell doth softly prove that thou, my universe, art still the sky wherein my heart doth move.
+                    </div>
+                  </div>
+                </div>
+                <audio preload="none" controls>
+                  <source src="../archive-media/song1.mp3" type="audio/mpeg">
+                  Your browser does not support the audio element.
+                </audio>
+              </article>
+
+              <!-- Song 2 -->
+              <article class="song-card">
+                <div class="song-info">
+                  <span class="song-number">2.</span>
+                  <div>
+                    <div class="song-title">Wave to Earth – “love”</div>
+                    <div class="song-note">
+                     This is the song where my heart first learned thy name.
+When this fair song begins, I see our first shy days, when hearts spoke low yet beat in wond’rous tune.
+Its gentle tide recalls how thou didst calm my storm, and turned my restless fears to silver moon.
+Each note doth whisper, soft and true, that every time it plays, my soul falls newly, deeply, still for you.
+                    </div>
+                  </div>
+                </div>
+                <audio preload="none" controls>
+                  <source src="../archive-media/song2.mp3" type="audio/mpeg">
+                  Your browser does not support the audio element.
+                </audio>
+              </article>
+
+              <!-- Song 3 -->
+              <article class="song-card">
+                <div class="song-info">
+                  <span class="song-number">3.</span>
+                  <div>
+                    <div class="song-title">"Something About You"</div>
+                    <div class="song-note">
+                      This is the song of the feeling I could never name.
+When this enchantment starts, I feel that first strange pull, when thou didst haunt my thoughts both night and day.
+It singeth of the nameless charm in thee that stole my peace, yet made me glad it would not go away.
+With every turning verse I find, that “something” warm and wild in thee hath once again bewitched my mind.
+                    </div>
+                  </div>
+                </div>
+                <audio preload="none" controls>
+                  <source src="../archive-media/song3.mp3" type="audio/mpeg">
+                  Your browser does not support the audio element.
+                </audio>
+              </article>
+
+              <!-- Song 4 -->
+              <article class="song-card">
+                <div class="song-info">
+                  <span class="song-number">4.</span>
+                  <div>
+                    <div class="song-title">Wave to Earth – “bad”</div>
+                    <div class="song-note">
+                    This is the song where my broken edges remember how thou held’st them soft.”
+When this bittersweet tune begins, I see the nights when my heart was frayed, yet thou didst stay and smooth each jagged thread.
+Its weary chords recall the storms we braved, the tears half‑hid and quiet hands that never once let go.
+Each time it playeth, I taste both hurt and healing, and I remember that even in our “bad” days, love chose to grow.
+                    </div>
+                  </div>
+                </div>
+                <audio preload="none" controls>
+                  <source src="../archive-media/song4.mp3" type="audio/mpeg">
+                  Your browser does not support the audio element.
+                </audio>
+              </article>
+
+              <!-- Song 5 -->
+              <article class="song-card">
+                <div class="song-info">
+                  <span class="song-number">5.</span>
+                  <div>
+                    <div class="song-title">"Ang Pag-ibig"</div>
+                    <div class="song-note">
+                     Sa tuwing maririnig ko ito, naaalala ko ang mga gabing tahimik, kung saan ang tanging ingay ay tibok ng puso ko na dahan‑dahang sumasabay sa iyo.
+Inihahatid ako ng bawat linya sa mga sandaling nahulog ako nang hindi ko namamalayan, hanggang sa ang simpleng ‘ikaw’ ay naging tahanan ng buong buhay ko.
+                    </div>
+                  </div>
+                </div>
+                <audio preload="none" controls>
+                  <source src="../archive-media/song5.mp3" type="audio/mpeg">
+                  Your browser does not support the audio element.
+                </audio>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <!-- BIBLE VERSES (OWN TAB) -->
+        <section class="page" id="verses">
+          <h1 class="page-heading">Verses I Pray Over Us</h1>
+          <p class="sub-heading">
+            Holy words that wrap our love in gentle promise, like lanterns hung along the path we walk together.
+          </p>
+          <div class="divider"></div>
+          <p>
+           These verses are like soft prayers breathed low for thee and me, sweet echoes that our love is kept by hands more gentle and mighty than our own.
+As thou dost read them, may thy heart feel held and ever bless’d, knowing our little story is laid before God with thankful, joyful rest.
+          </p>
+
+          <div class="verses-list">
+            <article class="verse-card">
+              <div class="verse-ref">Song of Solomon 2:16</div>
+              <div class="verse-text">“My beloved is mine, and I am his.”</div>
+              <div>
+                This verse reminds me how my heart rests in the knowing that we belong to one another,
+                held in a love that feels both tender and fierce.
+              </div>
+            </article>
+
+            <article class="verse-card">
+              <div class="verse-ref">Song of Solomon 4:9</div>
+              <div class="verse-text">“You have stolen my heart with one glance of your eyes.”</div>
+              <div>
+                So didst thou steal my heart, with a single look and a single smile,
+                and I have never wished to have it back.
+              </div>
+            </article>
+
+            <article class="verse-card">
+              <div class="verse-ref">1 Corinthians 13:4–7</div>
+              <div class="verse-text">
+                “Love is patient, love is kind… it always protects, always trusts, always hopes, always perseveres.”
+              </div>
+              <div>
+                When I think of how thou lovest—with patience, with gentleness, with a heart that still hopes even on hard days—
+                I see these words written across our story.
+              </div>
+            </article>
+
+            <article class="verse-card">
+              <div class="verse-ref">Ecclesiastes 4:9–10</div>
+              <div class="verse-text">
+                “Two are better than one… if either of them falls down, one can help the other up.”
+              </div>
+              <div>
+                This speaks of us, of how we hold each other up, wipe one another’s tears,
+                and walk forward hand in hand when life grows heavy.
+              </div>
+            </article>
+
+            <article class="verse-card">
+              <div class="verse-ref">Song of Solomon 6:3</div>
+              <div class="verse-text">“I am my beloved’s and my beloved is mine.”</div>
+              <div>
+                In these few words I find the quiet peace I feel whenever I remember that I am yours,
+                and thou art mine, under the kind and watchful eyes of heaven.
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <!-- SURPRISE with vertical video -->
+        <section class="page" id="surprise">
+          <h1 class="page-heading">A Secret Kept for Thee</h1>
+          <p class="sub-heading">Here, in this quiet corner, waits a wish woven only for thy heart.</p>
+          <div class="divider"></div>
+          <p class="centered">
+            Dear love, if words were jewels, I would heap them at thy feet; if songs were starlight, I would hang the night with melodies in thy name.
+            This page holds a little treasure I have shaped in secret, a moving portrait of all my feelings, set to motion and memory, so thou mayst see with thine eyes what my tongue oft stumbles to say.
+          </p>
+          <p class="centered">
+            When thy heart is ready, press play, and let the moments unfold like petals on the wind—each frame a whispered “I love thee,” each second a promise that I shall stand beside thee through every year yet to come.
+          </p>
+
+          <div class="video-frame">
+            <div class="video-vertical">
+              <!-- Put your own vertical video file here -->
+              <video id="birthdayVideo" controls playsinline preload="none" poster="../archive-media/film-poster.webp">
+                <source src="../archive-media/birthday-vertical.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <!-- Right vertical menu -->
+      <aside class="right-menu" id="rightMenu">
+        <div class="menu-title">Our Lavender Story</div>
+        <ul class="nav-list">
+          <li><button class="nav-link active" data-page="home">Home</button></li>
+          <li><button class="nav-link" data-page="memory1">First Meeting</button></li>
+          <li><button class="nav-link" data-page="reasons">Dear Future Us</button></li>
+          <li><button class="nav-link" data-page="songs">Songs That Remind Me of You</button></li>
+          <li><button class="nav-link" data-page="verses">Bible Verses</button></li>
+          <li><button class="nav-link" data-page="surprise">Secret Surprise</button></li>
+        </ul>
+      </aside>
+    </div>
+
+    <!-- Floating button to open right menu on phones -->
+    <button class="right-menu-toggle" id="menuToggle" aria-label="Chapter menu" aria-controls="rightMenu" aria-expanded="false"></button>
+  </div>
+
+  <script>
+    const backdrop = document.querySelector('.bg-blur');
+    backdrop.style.backgroundImage = 'url("../archive-media/lavender.jpg")';
+
+    // Switch pages when clicking menu buttons
+    const navLinks = document.querySelectorAll('.nav-link');
+    const pages = document.querySelectorAll('.page');
+    const archiveMedia = document.querySelectorAll('audio, video');
+    for (const media of archiveMedia) {
+      media.addEventListener('play', () => {
+        for (const other of archiveMedia) if (other !== media) other.pause();
+      });
+    }
+
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        const targetId = link.getAttribute('data-page');
+
+        navLinks.forEach(btn => btn.classList.remove('active'));
+        link.classList.add('active');
+
+        pages.forEach(page => {
+          if (page.id === targetId) {
+            page.classList.add('active');
+          } else {
+            page.classList.remove('active');
+          }
+        });
+
+        for (const media of document.querySelectorAll('audio, video')) {
+          if (!media.closest('.page.active')) media.pause();
+        }
+
+        // On small screens, hide menu after tapping a link
+        const rightMenu = document.getElementById('rightMenu');
+        const menuToggle = document.getElementById('menuToggle');
+        if (window.innerWidth < 860) {
+          rightMenu.classList.remove('open');
+          menuToggle.setAttribute('aria-expanded', 'false');
+        }
+        window.scrollTo({ top: 0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+      });
+    });
+
+    // Right-menu toggle (phone friendly)
+    const menuToggle = document.getElementById('menuToggle');
+    const rightMenu = document.getElementById('rightMenu');
+
+    menuToggle.addEventListener('click', () => {
+      rightMenu.classList.toggle('open');
+      const isOpen = rightMenu.classList.contains('open');
+      menuToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+
+    // Set initial video volume (0.0–1.0) so it is not too loud
+    const birthdayVideo = document.getElementById('birthdayVideo');
+    if (birthdayVideo) {
+      birthdayVideo.volume = 0.7; // 70% volume
+    }
+  </script>
+</body>
+</html>

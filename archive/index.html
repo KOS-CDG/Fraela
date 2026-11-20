@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#e9e1f2">
+  <title>Archive · To My Fairest Love</title>
+  <script type="module" src="../src/archive.js"></script>
+</head>
+<body class="archive-page">
+  <header class="archive-site">
+    <a href="../"><span aria-hidden="true">‹</span> All years</a>
+    <span>To My Fairest Love</span>
+  </header>
+
+  <div class="explorer">
+    <div class="window-title">
+      <span class="folder-icon" aria-hidden="true"></span>
+      <span id="window-label">Archive</span>
+    </div>
+    <div class="toolbar">
+      <a id="up-folder" class="up-folder" href="../"><span aria-hidden="true">↑</span> Up</a>
+      <nav class="breadcrumbs" aria-label="Folder location">
+        <ol id="breadcrumbs"><li aria-current="page">Archive</li></ol>
+      </nav>
+    </div>
+    <div class="explorer-body">
+      <nav class="folder-tree" aria-label="Folders">
+        <h2>Folders</h2>
+        <ul id="folder-tree"></ul>
+      </nav>
+      <main class="folder-contents" id="folder-contents">
+        <div class="folder-heading">
+          <h1 id="folder-heading">Archive</h1>
+          <label class="month-picker" id="month-picker" hidden>
+            <span>Go to month</span>
+            <select id="month-select"></select>
+          </label>
+        </div>
+        <div id="folder-items"></div>
+        <noscript><p>Enable JavaScript to browse the Creativity archive.</p></noscript>
+      </main>
+    </div>
+    <footer class="status-bar" id="archive-status"></footer>
+  </div>
+
+  <dialog class="viewer" id="archive-viewer" aria-labelledby="viewer-title" aria-describedby="viewer-time">
+    <header class="window-title viewer-header">
+      <h2 id="viewer-title"></h2>
+      <button class="window-button close-viewer" type="button" aria-label="Close viewer" autofocus>×</button>
+    </header>
+    <div class="viewer-media" id="viewer-media"></div>
+    <footer class="viewer-controls">
+      <button class="window-button" id="viewer-previous" type="button">‹ Previous</button>
+      <time id="viewer-time"></time>
+      <button class="window-button" id="viewer-next" type="button">Next ›</button>
+    </footer>
+  </dialog>
+</body>
+</html>

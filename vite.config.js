@@ -11,6 +11,7 @@ export default defineConfig({
         home: fromRoot('./index.html'),
         archive: fromRoot('./2025/index.html'),
         story: fromRoot('./2026/index.html'),
+        creativity: fromRoot('./archive/index.html'),
       },
     },
   },

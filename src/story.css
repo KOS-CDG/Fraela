@@ -21,6 +21,7 @@
   text-decoration: none;
 }
 .story-nav a:hover, .story-footer a:hover { text-decoration: underline; text-underline-offset: 0.25em; }
+.story-links { display: flex; align-items: center; flex-wrap: wrap; gap: 0 clamp(0.65rem, 2vw, 1.75rem); }
 .story-nav .arrow, .story-footer .arrow { transform: rotate(180deg); }
 .story-nav > span { font: 400 clamp(1.25rem, 3vw, 1.75rem)/1 var(--serif); text-align: right; }
 .story-footer { justify-content: center; }

@@ -458,7 +458,9 @@
       transform: translate(-50%, -50%);
       background: currentColor;
     }
-    .archive-back { position: absolute; left: 0.8rem; color: var(--soft-white); font-size: 0.76rem; }
+    .archive-back, .photo-archive { position: absolute; display: flex; align-items: center; min-height: 44px; color: var(--soft-white); font-size: 0.76rem; }
+    .archive-back { left: 0.8rem; }
+    .photo-archive { right: 0.8rem; }
     .top-title { padding-inline: 5rem; }
     .memory-photo { height: auto; aspect-ratio: 4 / 3; }
     .memory-photo img { object-fit: contain; }
@@ -472,6 +474,7 @@
     <header class="top-bar">
       <a class="archive-back" href="../">All years</a>
       <div class="top-title">For My Fairest Lavender Rose</div>
+      <a class="photo-archive" href="../archive/">Archive</a>
     </header>
 
     <div class="main-layout">

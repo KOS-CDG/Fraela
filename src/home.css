@@ -8,6 +8,9 @@
   padding: clamp(1rem, 5vw, 5rem);
 }
 .edition-heading { border-top: 1px solid currentColor; }
+.edition-nav { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.edition-nav a { display: inline-flex; align-items: center; gap: 0.5rem; min-height: 2.75rem; font-size: 0.9rem; font-weight: 650; text-decoration: none; }
+.edition-nav a:hover { text-decoration: underline; text-underline-offset: 0.2em; }
 .edition-heading p {
   margin: clamp(0.65rem, 2vh, 1.25rem) 0 0.65rem;
   font-size: 0.69rem;

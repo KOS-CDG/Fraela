@@ -13,8 +13,10 @@ import p0455 from "../photos/0455.webp";
 import p0555 from "../photos/0555.webp";
 import p0565 from "../photos/0565.webp";
 import p0617 from "../photos/0617.webp";
+import p0846 from "../photos/0846.webp";
 import p0836 from "../photos/0836.webp";
 import p0867 from "../photos/0867.webp";
+import p0943 from "../photos/0943.webp";
 import p0917 from "../photos/0917.webp";
 import { allPhotos } from "./content";
 
@@ -36,8 +38,10 @@ const EXTRA: Record<number, string> = {
   565: p0565,
   617: p0617,
   836: p0836,
+  846: p0846,
   867: p0867,
   917: p0917,
+  943: p0943,
 };
 
 const ON_PAGE = new Set(allPhotos.map((photo) => photo.page));
@@ -50,7 +54,9 @@ export const photo = (page: number): string => {
   }
   const extra = EXTRA[page];
   if (!extra) {
-    throw new Error(`Photo ${page} is neither on the 2026 page nor a film extra`);
+    throw new Error(
+      `Photo ${page} is neither on the 2026 page nor a film extra`,
+    );
   }
   return extra;
 };

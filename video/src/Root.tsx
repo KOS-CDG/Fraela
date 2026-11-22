@@ -1,7 +1,7 @@
 import { Audio } from "@remotion/media";
 import React from "react";
 import { Composition, Folder } from "remotion";
-import bgm from "./audio/bgm.mp3";
+import lifetime from "./audio/lifetime.mp3";
 import { Fraela2026, MUSIC_VOLUME } from "./Fraela2026";
 import "./lib/fonts";
 import { Bloom } from "./scenes/Bloom";
@@ -11,7 +11,14 @@ import { Mosaic } from "./scenes/Mosaic";
 import { Opening } from "./scenes/Opening";
 import { Stone } from "./scenes/Stone";
 import { White } from "./scenes/White";
-import { FILM_FRAMES, FPS, HEIGHT, SCENES, WIDTH } from "./timeline";
+import {
+  FILM_FRAMES,
+  FPS,
+  HEIGHT,
+  MUSIC_START,
+  SCENES,
+  WIDTH,
+} from "./timeline";
 
 const size = { width: WIDTH, height: HEIGHT, fps: FPS };
 
@@ -20,7 +27,11 @@ const withMusic = (Scene: React.FC, from: number) => {
   const Preview: React.FC = () => (
     <>
       <Scene />
-      <Audio src={bgm} trimBefore={from} volume={MUSIC_VOLUME} />
+      <Audio
+        src={lifetime}
+        trimBefore={MUSIC_START + from}
+        volume={MUSIC_VOLUME}
+      />
     </>
   );
   return Preview;

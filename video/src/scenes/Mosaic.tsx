@@ -26,12 +26,12 @@ const HEART = [
   0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0,
 ];
 const CENTRE = Math.floor((COLS * COLS) / 2);
-const ZOOM = 2 * BAR + 2 * BEAT - 4;
+const ZOOM = 3 * BAR + 2 * BEAT - 4;
 const [firstLine, secondLine] = content.film.mosaic;
 
 // Every photo of the year at once: the 25 tiles pop out from the middle,
-// ripple on each bar, light up as a heart, and then the camera dives into the
-// centre tile, which turns into the pink of the birthday wish.
+// ripple and flip, light up as a heart that beats with the song, and then the
+// camera dives into the centre tile, which turns into the pink of the wish.
 export const Mosaic: React.FC = () => {
   const root = useAnimeTimeline((tl, el) => {
     const tiles = all(el, ".tile");
@@ -102,6 +102,20 @@ export const Mosaic: React.FC = () => {
       { opacity: [0, 1], duration: 300, ease: "outQuad" },
       stagger(30, { start: ms(2 * BAR) }),
     );
+    // Then the heart beats on every beat until the dive.
+    const heart = tiles.filter((_, i) => HEART[i]);
+    for (let beat = 9; beat < 14; beat++) {
+      tl.add(
+        heart,
+        {
+          scale: [
+            { to: 1.13, duration: 70, ease: "outQuad" },
+            { to: 1.07, duration: 260, ease: "outQuad" },
+          ],
+        },
+        ms(beat * BEAT),
+      );
+    }
     tl.add(
       all(el, ".line-2 .word"),
       { opacity: [1, 0], duration: 200 },
@@ -131,6 +145,7 @@ export const Mosaic: React.FC = () => {
       <Audio src={whoosh} from={BAR} volume={0.4} />
       <Audio src={whoosh} from={BAR + 2 * BEAT} volume={0.4} />
       <Audio src={ding} from={2 * BAR} volume={0.5} />
+      <Audio src={sparkle} from={3 * BAR} volume={0.4} />
       <Audio src={whoosh} from={ZOOM} volume={0.75} />
 
       <div ref={root} style={{ position: "absolute", inset: 0 }}>

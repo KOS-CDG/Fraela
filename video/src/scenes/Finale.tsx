@@ -16,11 +16,14 @@ import { Confetti } from "../lib/Confetti";
 import { content, TONES } from "../lib/content";
 import { SANS, SERIF } from "../lib/fonts";
 import { Split } from "../lib/Split";
-import { BAR, BEAT, ms } from "../timeline";
+import { BAR, BEAT, ms, SCENES } from "../timeline";
 
 const tone = TONES.closing;
-// The last hit of the music, at 40 s.
-const HIT = 3 * BAR;
+// The second half of the chorus, 58.7 s into the film: the cannons fire.
+const HIT = 4 * BAR;
+// Two bars later, a second volley.
+const ENCORE = HIT + 2 * BAR;
+const BEATS = SCENES.finale.durationInFrames / BEAT;
 const heart = makeHeart({ height: 760 });
 const HEART_X = 540;
 const HEART_Y = 600;
@@ -34,8 +37,9 @@ const CONFETTI_COLORS = [
 ];
 const [happy, birthday, myLove] = content.film.finale;
 
-// The wish. Words bounce in on the beat, a heart is drawn behind them and
-// beats in time, and on the music's last hit two confetti cannons fire.
+// The wish, over the chorus. Words bounce in on the beat, a heart is drawn
+// behind them and beats in time, and halfway through the chorus two confetti
+// cannons fire, then fire again two bars later.
 export const Finale: React.FC = () => {
   const frame = useCurrentFrame();
 
@@ -74,9 +78,14 @@ export const Finale: React.FC = () => {
       { opacity: [0, 0.5], duration: 500, ease: "outQuad" },
       ms(40),
     );
-    // The heart beats with the music, and jumps on the last hit.
-    for (let beat = 4; beat < 20; beat++) {
-      const big = beat * BEAT === HIT;
+    // The heart beats with the music, and jumps when the cannons fire.
+    for (let beat = 4; beat < BEATS - 1; beat++) {
+      const at = beat * BEAT;
+      const big = at === HIT || at === ENCORE;
+      // A jump takes longer than a beat, so the beat after it rests.
+      if (at === HIT + BEAT || at === ENCORE + BEAT) {
+        continue;
+      }
       tl.add(
         one(el, ".heart"),
         {
@@ -90,7 +99,7 @@ export const Finale: React.FC = () => {
                 { to: 1, duration: 330, ease: "outQuad" },
               ],
         },
-        ms(beat * BEAT),
+        ms(at),
       );
     }
     tl.add(
@@ -99,21 +108,23 @@ export const Finale: React.FC = () => {
       stagger(70, { start: ms(4 * BEAT + 6) }),
     );
 
-    tl.add(
-      one(el, ".ring"),
-      { opacity: [1, 0], scale: [0.2, 4.2], duration: 850, ease: "outExpo" },
-      ms(HIT),
-    );
-    tl.add(
-      all(el, ".line-0 .char, .line-1 .char"),
-      {
-        fontWeight: [
-          { to: 380, duration: 110, ease: "outQuad" },
-          { to: 900, duration: 600, ease: "outElastic(1, .5)" },
-        ],
-      },
-      stagger(20, { start: ms(HIT) }),
-    );
+    [HIT, ENCORE].forEach((at, i) => {
+      tl.add(
+        one(el, `.ring-${i}`),
+        { opacity: [1, 0], scale: [0.2, 4.2], duration: 850, ease: "outExpo" },
+        ms(at),
+      );
+      tl.add(
+        all(el, ".line-0 .char, .line-1 .char"),
+        {
+          fontWeight: [
+            { to: 380, duration: 110, ease: "outQuad" },
+            { to: 900, duration: 600, ease: "outElastic(1, .5)" },
+          ],
+        },
+        stagger(20, { start: ms(at) }),
+      );
+    });
     tl.add(
       all(el, ".signoff-char"),
       {
@@ -124,6 +135,16 @@ export const Finale: React.FC = () => {
         ease: "outElastic(1, .5)",
       },
       stagger(45, { start: ms(HIT + 6) }),
+    );
+    tl.add(
+      all(el, ".signoff-char"),
+      {
+        y: [
+          { to: -28, duration: 160, ease: "outQuad" },
+          { to: 0, duration: 560, ease: "outBounce" },
+        ],
+      },
+      stagger(40, { start: ms(ENCORE) }),
     );
   });
 
@@ -143,11 +164,14 @@ export const Finale: React.FC = () => {
       <Audio src={sparkle} from={40} volume={0.5} />
       <Audio src={whoosh} from={4 * BEAT + 4} volume={0.35} />
       {/* The three hits are a few frames apart, so their peaks don't stack. */}
-      <Audio src={impact} from={HIT} volume={0.55} />
-      <Audio src={confetti} from={HIT + 2} volume={0.45} />
-      <Audio src={cheer} from={HIT + 5} volume={0.5} />
+      <Audio src={impact} from={HIT} volume={0.45} />
+      <Audio src={confetti} from={HIT + 2} volume={0.4} />
+      <Audio src={cheer} from={HIT + 5} volume={0.35} />
       <Audio src={ding} from={HIT + 14} volume={0.3} />
-      <Audio src={sparkle} from={HIT + 20} volume={0.6} />
+      <Audio src={sparkle} from={HIT + 20} volume={0.5} />
+      <Audio src={pop} from={ENCORE} volume={0.5} />
+      <Audio src={confetti} from={ENCORE + 2} volume={0.4} />
+      <Audio src={sparkle} from={ENCORE + 16} volume={0.45} />
 
       <div
         ref={root}
@@ -190,19 +214,22 @@ export const Finale: React.FC = () => {
           </svg>
         </div>
 
-        <div
-          className="ring"
-          style={{
-            position: "absolute",
-            left: HEART_X - 150,
-            top: HEART_Y - 150,
-            width: 300,
-            height: 300,
-            borderRadius: "50%",
-            border: `12px solid ${tone.accent}`,
-            opacity: 0,
-          }}
-        />
+        {[0, 1].map((i) => (
+          <div
+            key={i}
+            className={`ring-${i}`}
+            style={{
+              position: "absolute",
+              left: HEART_X - 150,
+              top: HEART_Y - 150,
+              width: 300,
+              height: 300,
+              borderRadius: "50%",
+              border: `12px solid ${tone.accent}`,
+              opacity: 0,
+            }}
+          />
+        ))}
 
         {[happy, birthday].map((line, i) => (
           <div
@@ -278,11 +305,23 @@ export const Finale: React.FC = () => {
         seed="birthday-fall"
         start={HIT + 24}
       />
+      <Confetti
+        count={45}
+        colors={CONFETTI_COLORS}
+        seed="birthday-fall-encore"
+        start={ENCORE + 24}
+      />
       <ConfettiCannons
         start={HIT}
         count={150}
         colors={CONFETTI_COLORS}
         seed="birthday"
+      />
+      <ConfettiCannons
+        start={ENCORE}
+        count={90}
+        colors={CONFETTI_COLORS}
+        seed="birthday-encore"
       />
     </AbsoluteFill>
   );

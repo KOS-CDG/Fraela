@@ -26,9 +26,9 @@ const PRINTS = [
 ];
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 
-// "In white", as the chorus starts: prints are tossed onto a table one per
-// beat. Sideways and upward motion use different easings, so each print flies
-// in on a curve. The title gets a hand-drawn underline and a heart.
+// "In white": prints are tossed onto a table one per beat. Sideways and upward
+// motion use different easings, so each print flies in on a curve. The title
+// gets a hand-drawn underline and a heart.
 export const White: React.FC = () => {
   const frame = useCurrentFrame();
 

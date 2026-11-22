@@ -28,13 +28,13 @@ const DIGIT_COLORS = [
 ];
 const PHOTO_URLS = allPhotos.map((photo) => photoSrc(photo.page));
 const [smallLine, ...bigLines] = content.film.opening;
-// Frame 222: everything is pulled into the middle; the music stops at 231.
-const SUCK_IN = 3 * BAR + 2 * BEAT + 12;
+// Everything is pulled into the middle on the song's pickup into the band.
+const SUCK_IN = 4 * BAR - 18;
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 
-// Bars 1 to 4, over the intro stabs: the year slams in a digit per beat, fills
+// Bars 1 to 4, over the song's intro: the year slams in a digit per beat, fills
 // with photos that change on every beat, "was a full blast" bounces in and
-// bursts, then the riser pulls everything into one spark before the drop.
+// bursts, then the riser pulls everything into one spark as the band comes in.
 export const Opening: React.FC = () => {
   const frame = useCurrentFrame();
   usePreloadedImages(PHOTO_URLS);
@@ -151,9 +151,9 @@ export const Opening: React.FC = () => {
       <Audio src={sparkle} from={BAR} volume={0.6} />
       <Audio src={pop} from={2 * BAR} volume={0.55} />
       <Audio src={pop} from={2 * BAR + BEAT} volume={0.6} />
-      <Audio src={impact} from={2 * BAR + 2 * BEAT} volume={0.5} />
-      <Audio src={confetti} from={2 * BAR + 2 * BEAT} volume={0.55} />
-      <Audio src={riser} from={184} volume={0.75} />
+      <Audio src={impact} from={2 * BAR + 2 * BEAT} volume={0.3} />
+      <Audio src={confetti} from={2 * BAR + 2 * BEAT} volume={0.4} />
+      <Audio src={riser} from={4 * BAR - 56} volume={0.6} />
 
       <div
         style={{
@@ -161,7 +161,7 @@ export const Opening: React.FC = () => {
           left: 540,
           top: 675,
           opacity: interpolate(frame, [SUCK_IN, SUCK_IN + 12], [0.9, 0], clamp),
-          rotate: `${interpolate(frame, [0, 240], [0, 70], { easing: Easing.in(Easing.quad) })}deg`,
+          rotate: `${interpolate(frame, [0, 4 * BAR], [0, 70], { easing: Easing.in(Easing.quad) })}deg`,
           scale: 1 + 0.05 * Math.exp(-sinceBeat / 4),
         }}
       >

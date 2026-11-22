@@ -203,6 +203,10 @@ close.addEventListener('click', () => dialog.close())
 dialog.addEventListener('close', () => {
   stopVideo()
   viewerMedia.replaceChildren()
+  if (query.has('item')) {
+    query.delete('item')
+    history.replaceState(history.state, '', `${location.pathname}?${query}${location.hash}`)
+  }
   opener?.focus()
 })
 dialog.addEventListener('keydown', (event) => {
@@ -248,6 +252,9 @@ function renderContents() {
     files.append(...month.items.map(fileTile))
     contents.append(files)
     status.textContent = itemCount(month.items.length)
+    const selectedId = query.get('item')
+    const selectedIndex = month.items.findIndex(({ id }) => id === selectedId)
+    if (selectedIndex !== -1) openItem(selectedIndex, files.children[selectedIndex].firstElementChild)
   } else if (missingMonth) {
     const message = element('p', 'missing-folder', 'This month is unavailable. ')
     message.append(link('Back to Creativity', CREATIVITY))

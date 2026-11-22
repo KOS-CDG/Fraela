@@ -1,11 +1,15 @@
 import { animate, createTimeline, onScroll, splitText, stagger, utils } from 'animejs'
 import content from './gallery-2026.json'
 import sizes from './gallery-2026-photos.json'
+import archive from './creativity-archive.json'
 // Section colours, shared with the film in video/. Each section sets them as it reaches the middle of the screen.
 import TONES from './gallery-2026-tones.json'
 
 const PHOTOS = '../media/2026/photos/'
 const FILM = '../media/2026/film/'
+const ARCHIVE_MEDIA = '../media/creativity/'
+const MEMORY_MEDIA = '../media/2026/memories/'
+const archiveById = new Map(archive.map((item) => [item.id, item]))
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches
 const narrow = matchMedia('(max-width: 760px)').matches
 
@@ -112,6 +116,80 @@ function renderHero() {
   return hero
 }
 
+function renderMemory(chapter) {
+  const memory = chapter.memory
+  const item = archiveById.get(memory.archiveId)
+  if (memory.archiveId && !item) return null
+
+  const src = item ? ARCHIVE_MEDIA + item.preview : MEMORY_MEDIA + memory.file
+  const kind = item?.kind ?? memory.kind
+  const section = element('section', 'chapter-memory')
+  const title = element('h3', '', 'From the Archive')
+  title.id = `${chapter.id}-memory-title`
+  section.setAttribute('aria-labelledby', title.id)
+
+  const copy = element('div', 'memory-copy')
+  copy.append(title, element('p', 'memory-caption', memory.caption))
+  if (item) {
+    const link = element('a', 'memory-link', 'View in Creativity Archive')
+    const params = new URLSearchParams({
+      folder: 'creativity', month: item.timestamp.slice(0, 7), item: item.id,
+    })
+    link.href = `../archive/?${params}`
+    copy.append(link)
+  }
+
+  const media = element('div', 'memory-media')
+  if (kind === 'photo') {
+    const button = element('button', 'shot-open')
+    button.type = 'button'
+    button.setAttribute('aria-haspopup', 'dialog')
+    const image = element('img')
+    image.src = item ? ARCHIVE_MEDIA + item.thumb : src
+    image.alt = memory.alt
+    image.loading = 'lazy'
+    image.decoding = 'async'
+    if (memory.width && memory.height) {
+      image.width = memory.width
+      image.height = memory.height
+    }
+    button.append(image)
+    button.addEventListener('click', () => openViewer(0, [{ ...memory, chapter, src }]))
+    media.append(button)
+  } else {
+    const player = element(kind === 'video' ? 'video' : 'audio')
+    player.controls = true
+    player.preload = 'none'
+    player.src = src
+    player.setAttribute('aria-label', `${chapter.title} archive ${kind === 'video' ? 'clip' : 'voice note'}`)
+    if (kind === 'video') {
+      player.playsInline = true
+      if (memory.poster) player.poster = MEMORY_MEDIA + memory.poster
+      if (memory.captions) {
+        const track = element('track')
+        track.kind = 'captions'
+        track.label = 'English'
+        track.srclang = 'en'
+        track.src = MEMORY_MEDIA + memory.captions
+        player.append(track)
+      }
+    }
+    player.addEventListener('play', () => {
+      for (const other of document.querySelectorAll('.chapter-memory audio, .chapter-memory video, .film video')) {
+        if (other !== player) other.pause()
+      }
+    })
+    media.append(player)
+  }
+  if (memory.transcript) {
+    const details = element('details', 'memory-transcript')
+    details.append(element('summary', '', 'Transcript'), element('p', '', memory.transcript))
+    media.append(details)
+  }
+  section.append(copy, media)
+  return section
+}
+
 function renderChapter(chapter) {
   const section = element('section', `chapter chapter-${chapter.layout}`)
   section.id = chapter.id
@@ -132,6 +210,8 @@ function renderChapter(chapter) {
     for (const photo of chapter.photos) list.append(shot(photo, '(max-width: 760px) 80vw, 46vw'))
     section.append(chapterHead(chapter), list)
   }
+  const memory = chapter.memory && renderMemory(chapter)
+  if (memory) section.append(memory)
   return section
 }
 
@@ -205,40 +285,55 @@ function renderClosing() {
 // Photo viewer
 const viewer = document.getElementById('viewer')
 const viewerImage = document.getElementById('viewer-image')
+const viewerPrevious = document.getElementById('viewer-prev')
+const viewerNext = document.getElementById('viewer-next')
+const viewerCount = document.getElementById('viewer-count')
+let viewerPhotos = photos
 let current = 0
 
 function showPhoto(index) {
-  current = (index + photos.length) % photos.length
-  const photo = photos[current]
-  const { w, h } = sizes[photo.page]
-  viewerImage.src = file(photo.page, 'l')
-  viewerImage.width = w
-  viewerImage.height = h
+  current = (index + viewerPhotos.length) % viewerPhotos.length
+  const photo = viewerPhotos[current]
+  const size = sizes[photo.page]
+  viewerImage.src = photo.src ?? file(photo.page, 'l')
+  if (size) {
+    viewerImage.width = size.w
+    viewerImage.height = size.h
+  } else {
+    viewerImage.removeAttribute('width')
+    viewerImage.removeAttribute('height')
+  }
   viewerImage.alt = photo.alt
   document.getElementById('viewer-chapter').textContent = photo.chapter.title
   document.getElementById('viewer-text').textContent = photo.caption
-  document.getElementById('viewer-count').textContent = `${current + 1} of ${photos.length}`
+  viewerCount.textContent = `${current + 1} of ${viewerPhotos.length}`
   if (!reduceMotion) animate(viewerImage, { opacity: [0, 1], scale: [0.97, 1], duration: 420, ease: 'out(3)' })
 }
 
-function openViewer(index) {
+function openViewer(index, collection = photos) {
+  viewerPhotos = collection
+  const singlePhoto = collection.length === 1
+  viewerPrevious.hidden = singlePhoto
+  viewerNext.hidden = singlePhoto
+  viewerCount.hidden = singlePhoto
   showPhoto(index)
   document.documentElement.classList.add('viewer-open')
   viewer.showModal()
 }
 
-document.getElementById('viewer-prev').addEventListener('click', () => showPhoto(current - 1))
-document.getElementById('viewer-next').addEventListener('click', () => showPhoto(current + 1))
+viewerPrevious.addEventListener('click', () => showPhoto(current - 1))
+viewerNext.addEventListener('click', () => showPhoto(current + 1))
 document.getElementById('viewer-close').addEventListener('click', () => viewer.close())
 viewer.addEventListener('close', () => document.documentElement.classList.remove('viewer-open'))
 viewer.addEventListener('keydown', (event) => {
+  if (viewerPhotos.length < 2) return
   if (event.key === 'ArrowLeft') showPhoto(current - 1)
   if (event.key === 'ArrowRight') showPhoto(current + 1)
 })
 let swipeStart = null
 viewerImage.addEventListener('pointerdown', (event) => { swipeStart = event.clientX })
 viewerImage.addEventListener('pointerup', (event) => {
-  if (swipeStart === null) return
+  if (swipeStart === null || viewerPhotos.length < 2) return
   const distance = event.clientX - swipeStart
   swipeStart = null
   if (Math.abs(distance) > 50) showPhoto(current + (distance < 0 ? 1 : -1))
@@ -278,6 +373,9 @@ for (const section of main.querySelectorAll('[data-tone]')) {
 
 // The film plays silently while it is on screen; the button restarts it with sound.
 const video = main.querySelector('.film video')
+video.addEventListener('play', () => {
+  for (const memory of main.querySelectorAll('.chapter-memory audio, .chapter-memory video')) memory.pause()
+})
 onScroll({
   target: video,
   onEnter: () => { if (!reduceMotion || !video.muted) video.play().catch(() => {}) },

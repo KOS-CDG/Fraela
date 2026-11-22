@@ -214,6 +214,43 @@ img { display: block; max-width: 100%; }
 .reel .shot:nth-child(odd) { align-self: flex-start; margin-top: 10svh; }
 .reel .shot:nth-child(even) { align-self: flex-end; margin-bottom: 8svh; }
 
+.chapter-memory {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: center;
+  gap: clamp(1.25rem, 4vw, 3.5rem);
+  max-width: 58rem;
+  margin: clamp(4rem, 14vh, 9rem) auto 0;
+  padding-top: clamp(1.5rem, 4vw, 3rem);
+  border-top: 1px solid currentColor;
+}
+.chapter-reel .chapter-memory {
+  max-width: min(58rem, calc(100% - 2 * var(--gutter)));
+  margin-bottom: clamp(4rem, 12vh, 8rem);
+}
+.memory-copy h3 {
+  margin: 0;
+  font: 400 clamp(2rem, 5vw, 4rem)/1 var(--serif);
+}
+.memory-caption {
+  max-width: 34ch;
+  margin: 0.85rem 0 1rem;
+  font: italic 400 clamp(1.15rem, 2vw, 1.55rem)/1.35 var(--serif);
+}
+.memory-link { color: inherit; text-underline-offset: 0.25em; }
+.memory-media :is(img, video, audio) { display: block; width: 100%; }
+.memory-media :is(img, video) {
+  height: auto;
+  max-height: 55svh;
+  object-fit: contain;
+}
+.memory-transcript { margin-top: 1rem; }
+.memory-transcript summary { cursor: pointer; }
+
+@media (max-width: 760px) {
+  .chapter-memory { grid-template-columns: minmax(0, 1fr); }
+}
+
 /* Film */
 .film {
   display: grid;

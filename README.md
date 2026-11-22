@@ -29,6 +29,12 @@ python3 tools/build_gallery_2026.py path/to/Fraela_pics_compressed.pdf
 
 The tool takes the listed pages from the PDF, writes a large and a small WebP of each to `public/media/2026/photos/`, removes photos that are no longer listed and records their sizes in `src/gallery-2026-photos.json`.
 
+### From the Archive
+
+Each chapter can point to a Creativity item in its `memory` entry in `src/gallery-2026.json`. Use the item's `archiveId` from `src/creativity-archive.json` and add a `caption` about the moment. For a photo, add descriptive `alt` text and its thumbnail `width` and `height`. The gallery reuses the archive files and links directly to the item.
+
+For a file outside the archive, put it in `public/media/2026/memories/` and use `kind` (`photo`, `video`, or `audio`) and `file` in place of `archiveId`. Add a `transcript` for spoken audio or a `captions` WebVTT filename for a clip with speech. A clip can also have a `poster` filename.
+
 ## 2026 film
 
 The film is a Remotion project in `video/`. It reads the same content file and the photos in `public/media/2026/`, and shows all 25 photos. It is cut to "Lifetime" by Ben&Ben (90 BPM): every scene starts on a bar of the song and every photo lands on a beat. Remotion keeps time, places the sound and adds the camera motion blur; anime.js does the bouncing letters, staggers, line drawing and the photo heart.

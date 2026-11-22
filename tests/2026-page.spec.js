@@ -1,9 +1,11 @@
-import { expect, test } from '@playwright/test'
+import { devices, expect, test } from '@playwright/test'
 import { readFileSync } from 'node:fs'
 
 const content = JSON.parse(readFileSync(new URL('../src/gallery-2026.json', import.meta.url)))
 const photos = content.chapters.flatMap((chapter) => chapter.photos.map((photo) => ({ ...photo, chapter })))
 const pages = photos.map(({ page }) => page)
+const archive = JSON.parse(readFileSync(new URL('../src/creativity-archive.json', import.meta.url)))
+const memoryIds = { bloom: '0338', stone: '0047', gold: '0439', white: '0679' }
 
 test('the 2026 content lists 25 distinct photos, each with a caption and a description', () => {
   expect(photos).toHaveLength(25)
@@ -50,7 +52,7 @@ test('2026 shows the hero, four chapters with their messages, the film and the b
 
 test('every photo on the page loads', async ({ page }) => {
   await page.goto('/2026/')
-  const images = page.getByRole('main').locator('img')
+  const images = page.locator('.hero-photo img, .shot img')
   await expect(images).toHaveCount(photos.length + content.hero.length)
   // Photos load lazily, so scroll down the whole page first.
   for (let y = 0; y < (await page.evaluate(() => document.documentElement.scrollHeight)); y += 600) {
@@ -119,4 +121,61 @@ test('the old 2026 gallery files are gone', async ({ request }) => {
     headers: { Accept: 'image/webp' },
   })
   expect(formerGalleryPhoto.status()).toBe(404)
+})
+
+test('each chapter ends with its selected archive memory and deep link', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.goto('/2026/')
+
+  for (const chapter of content.chapters) {
+    const item = archive.find(({ id }) => id === memoryIds[chapter.id])
+    const section = page.getByRole('region', { name: chapter.title, exact: true })
+    const memory = section.getByRole('region', { name: 'From the Archive' })
+    await expect(section.locator(':scope > :last-child')).toHaveClass('chapter-memory')
+    await expect(memory.getByText(chapter.memory.caption)).toBeVisible()
+    const thumbnail = memory.getByRole('img', { name: chapter.memory.alt })
+    await expect(thumbnail).toHaveAttribute('src', `../media/creativity/${item.thumb}`)
+    await thumbnail.scrollIntoViewIfNeeded()
+    await expect.poll(() => thumbnail.evaluate((image) => image.naturalWidth)).toBeGreaterThan(0)
+    await expect(memory.getByRole('link', { name: 'View in Creativity Archive' })).toHaveAttribute(
+      'href', `../archive/?folder=creativity&month=${item.timestamp.slice(0, 7)}&item=${item.id}`,
+    )
+  }
+
+  const memory = page.getByRole('region', { name: 'Golden night', exact: true }).getByRole('region', { name: 'From the Archive' })
+  await memory.getByRole('link', { name: 'View in Creativity Archive' }).click()
+  const archiveItem = page.getByRole('dialog', { name: 'Photo 0439' })
+  await expect(archiveItem).toBeVisible()
+  await expect(archiveItem.locator('time')).toHaveAttribute('datetime', '2026-04-27T17:03:35')
+  await page.keyboard.press('Escape')
+  await expect(archiveItem).toBeHidden()
+  await expect(page).toHaveURL('/archive/?folder=creativity&month=2026-04')
+  await expect(page.getByRole('button', { name: /Photo 0439/ })).toBeFocused()
+  await page.goBack()
+  await expect(memory).toBeVisible()
+})
+
+test.describe('phone memories', () => {
+  const { defaultBrowserType, ...phone } = devices['iPhone 13']
+  test.use(phone)
+
+  test('a memory uses the photo viewer and the portrait sequence still works afterward', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' })
+    await page.goto('/2026/')
+    const [chapter] = content.chapters
+    const memory = page.getByRole('region', { name: 'From the Archive' }).first()
+    const opener = memory.getByRole('button', { name: chapter.memory.alt })
+    await opener.tap()
+    const viewer = page.getByRole('dialog', { name: 'Photo viewer' })
+    await expect(viewer.getByRole('img')).toHaveAttribute('src', '../media/creativity/2026-02/0338.webp')
+    await expect(viewer.getByText(chapter.memory.caption)).toBeVisible()
+    await expect(viewer.getByRole('button', { name: 'Next' })).toBeHidden()
+    await viewer.getByRole('button', { name: 'Close' }).tap()
+    await expect(opener).toBeFocused()
+
+    await page.getByRole('button', { name: chapter.photos[0].alt }).tap()
+    await expect(viewer.getByText('1 of 25')).toBeVisible()
+    await viewer.getByRole('button', { name: 'Next' }).tap()
+    await expect(viewer.getByRole('img')).toHaveAttribute('alt', chapter.photos[1].alt)
+  })
 })

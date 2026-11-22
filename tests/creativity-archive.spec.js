@@ -114,6 +114,12 @@ test('each folder renders its month and only requests its thumbnails until openi
   expect((await preview).ok()).toBe(true)
 })
 
+test('an item from another month leaves the requested folder open', async ({ page }) => {
+  await page.goto(`${monthUrl('2026-04')}&item=0338`)
+  await expect(page.getByRole('heading', { name: 'April 2026', exact: true })).toBeVisible()
+  await expect(page.getByRole('dialog')).toBeHidden()
+})
+
 test('unavailable months link back to Creativity', async ({ page }) => {
   await page.goto(monthUrl('2040-01'))
   await expect(page.getByRole('heading', { name: 'Month not found' })).toBeVisible()

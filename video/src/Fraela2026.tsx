@@ -1,86 +1,64 @@
 import { Audio } from "@remotion/media";
-import { linearTiming, TransitionSeries } from "@remotion/transitions";
-import { fade } from "@remotion/transitions/fade";
 import React from "react";
-import { AbsoluteFill, interpolate } from "remotion";
+import { AbsoluteFill, interpolate, Sequence } from "remotion";
 import bgm from "./audio/bgm.mp3";
 import { TONES } from "./lib/content";
 import "./lib/fonts";
-import { BloomScene, StoneScene, WhiteScene } from "./scenes/ChapterScene";
+import { Bloom } from "./scenes/Bloom";
 import { Finale } from "./scenes/Finale";
-import { GoldReel } from "./scenes/GoldReel";
+import { Gold } from "./scenes/Gold";
+import { Mosaic } from "./scenes/Mosaic";
 import { Opening } from "./scenes/Opening";
-import { FILM_FRAMES, SCENE_FRAMES, TRANSITION } from "./timeline";
+import { Stone } from "./scenes/Stone";
+import { White } from "./scenes/White";
+import { BAR, FILM_FRAMES, SCENES } from "./timeline";
 
-const crossfade = (
-  <TransitionSeries.Transition
-    presentation={fade()}
-    timing={linearTiming({ durationInFrames: TRANSITION })}
-  />
-);
+export const MUSIC_VOLUME = 0.75;
+// The drop and the last hit stack an impact on the loudest moments of the
+// music, so the music ducks under them for a moment instead of clipping.
+const HITS = [SCENES.bloom.from, SCENES.finale.from + 3 * BAR];
 
-// The whole birthday film: opening, the four chapters, then the wish.
-// Each scene brings its own sound effects; the music runs underneath.
+const musicVolume = (f: number) => {
+  const duck = HITS.reduce(
+    (level, hit) =>
+      f >= hit - 1
+        ? Math.min(level, 1 - 0.4 * Math.exp(-(f - hit + 1) / 9))
+        : level,
+    1,
+  );
+  const fadeOut = interpolate(f, [FILM_FRAMES - 24, FILM_FRAMES], [1, 0], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+  return MUSIC_VOLUME * duck * fadeOut;
+};
+
+// The whole birthday film. Scenes are hard cuts on the bar lines of the music
+// (see timeline.ts); each scene brings its own sound effects.
 export const Fraela2026: React.FC = () => (
   <AbsoluteFill style={{ backgroundColor: TONES.night.bg }}>
-    <TransitionSeries>
-      <TransitionSeries.Sequence
-        name="Opening"
-        durationInFrames={SCENE_FRAMES.opening}
-      >
-        <Opening />
-      </TransitionSeries.Sequence>
-      {crossfade}
-      <TransitionSeries.Sequence
-        name="In bloom"
-        durationInFrames={SCENE_FRAMES.bloom}
-      >
-        <BloomScene />
-      </TransitionSeries.Sequence>
-      {crossfade}
-      <TransitionSeries.Sequence
-        name="Sage and stone"
-        durationInFrames={SCENE_FRAMES.stone}
-      >
-        <StoneScene />
-      </TransitionSeries.Sequence>
-      {crossfade}
-      <TransitionSeries.Sequence
-        name="Golden night"
-        durationInFrames={SCENE_FRAMES.gold}
-      >
-        <GoldReel />
-      </TransitionSeries.Sequence>
-      {crossfade}
-      <TransitionSeries.Sequence
-        name="In white"
-        durationInFrames={SCENE_FRAMES.white}
-      >
-        <WhiteScene />
-      </TransitionSeries.Sequence>
-      {crossfade}
-      <TransitionSeries.Sequence
-        name="Finale"
-        durationInFrames={SCENE_FRAMES.finale}
-      >
-        <Finale />
-      </TransitionSeries.Sequence>
-    </TransitionSeries>
+    <Sequence name="2026 was a full blast" {...SCENES.opening}>
+      <Opening />
+    </Sequence>
+    <Sequence name="In bloom" {...SCENES.bloom}>
+      <Bloom />
+    </Sequence>
+    <Sequence name="Sage and stone" {...SCENES.stone}>
+      <Stone />
+    </Sequence>
+    <Sequence name="Golden night" {...SCENES.gold}>
+      <Gold />
+    </Sequence>
+    <Sequence name="In white" {...SCENES.white}>
+      <White />
+    </Sequence>
+    <Sequence name="Every photo" {...SCENES.mosaic}>
+      <Mosaic />
+    </Sequence>
+    <Sequence name="The wish" {...SCENES.finale}>
+      <Finale />
+    </Sequence>
 
-    <Audio
-      name="Music"
-      src={bgm}
-      volume={(f) =>
-        interpolate(
-          f,
-          [0, 36, FILM_FRAMES - 75, FILM_FRAMES],
-          [0, 0.8, 0.8, 0],
-          {
-            extrapolateLeft: "clamp",
-            extrapolateRight: "clamp",
-          },
-        )
-      }
-    />
+    <Audio name="Music" src={bgm} volume={musicVolume} />
   </AbsoluteFill>
 );

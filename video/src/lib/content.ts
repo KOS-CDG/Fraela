@@ -19,9 +19,10 @@ export const getChapter = (id: ChapterId): Chapter => {
   return chapter;
 };
 
-// Photos marked "film": true in the content file, in page order.
-export const filmPhotos = (chapter: Chapter): Photo[] =>
-  chapter.photos.filter((photo) => photo.film);
+// Every photo on the page, in page order.
+export const allPhotos: Photo[] = gallery.chapters.flatMap(
+  (chapter) => chapter.photos,
+);
 
 export const photoSrc = (page: number) =>
   staticFile(`photos/${String(page).padStart(4, "0")}-l.webp`);

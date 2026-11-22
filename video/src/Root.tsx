@@ -1,55 +1,54 @@
+import { Audio } from "@remotion/media";
 import React from "react";
 import { Composition, Folder } from "remotion";
-import { Fraela2026 } from "./Fraela2026";
+import bgm from "./audio/bgm.mp3";
+import { Fraela2026, MUSIC_VOLUME } from "./Fraela2026";
 import "./lib/fonts";
-import { BloomScene, StoneScene, WhiteScene } from "./scenes/ChapterScene";
+import { Bloom } from "./scenes/Bloom";
 import { Finale } from "./scenes/Finale";
-import { GoldReel } from "./scenes/GoldReel";
+import { Gold } from "./scenes/Gold";
+import { Mosaic } from "./scenes/Mosaic";
 import { Opening } from "./scenes/Opening";
-import { FILM_FRAMES, FPS, HEIGHT, SCENE_FRAMES, WIDTH } from "./timeline";
+import { Stone } from "./scenes/Stone";
+import { White } from "./scenes/White";
+import { FILM_FRAMES, FPS, HEIGHT, SCENES, WIDTH } from "./timeline";
 
 const size = { width: WIDTH, height: HEIGHT, fps: FPS };
+
+// Each scene on its own, with its stretch of the music, for previewing in the Studio.
+const withMusic = (Scene: React.FC, from: number) => {
+  const Preview: React.FC = () => (
+    <>
+      <Scene />
+      <Audio src={bgm} trimBefore={from} volume={MUSIC_VOLUME} />
+    </>
+  );
+  return Preview;
+};
+
+const scenes = [
+  { id: "Opening", Scene: Opening, ...SCENES.opening },
+  { id: "InBloom", Scene: Bloom, ...SCENES.bloom },
+  { id: "SageAndStone", Scene: Stone, ...SCENES.stone },
+  { id: "GoldenNight", Scene: Gold, ...SCENES.gold },
+  { id: "InWhite", Scene: White, ...SCENES.white },
+  { id: "EveryPhoto", Scene: Mosaic, ...SCENES.mosaic },
+  { id: "Wish", Scene: Finale, ...SCENES.finale },
+].map((scene) => ({ ...scene, Preview: withMusic(scene.Scene, scene.from) }));
 
 export const RemotionRoot: React.FC = () => {
   return (
     <>
       <Folder name="Fraela2026-Scenes">
-        <Composition
-          id="Opening"
-          component={Opening}
-          durationInFrames={SCENE_FRAMES.opening}
-          {...size}
-        />
-        <Composition
-          id="InBloom"
-          component={BloomScene}
-          durationInFrames={SCENE_FRAMES.bloom}
-          {...size}
-        />
-        <Composition
-          id="SageAndStone"
-          component={StoneScene}
-          durationInFrames={SCENE_FRAMES.stone}
-          {...size}
-        />
-        <Composition
-          id="GoldenNight"
-          component={GoldReel}
-          durationInFrames={SCENE_FRAMES.gold}
-          {...size}
-        />
-        <Composition
-          id="InWhite"
-          component={WhiteScene}
-          durationInFrames={SCENE_FRAMES.white}
-          {...size}
-        />
-        <Composition
-          id="Finale"
-          component={Finale}
-          durationInFrames={SCENE_FRAMES.finale}
-          {...size}
-        />
+        {scenes.map(({ id, Preview, durationInFrames }) => (
+          <Composition
+            key={id}
+            id={id}
+            component={Preview}
+            durationInFrames={durationInFrames}
+            {...size}
+          />
+        ))}
       </Folder>
       <Composition
         id="Fraela2026"

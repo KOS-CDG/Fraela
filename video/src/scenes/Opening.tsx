@@ -1,244 +1,297 @@
 import { Audio } from "@remotion/media";
+import { stagger } from "animejs";
 import React from "react";
-import {
-  AbsoluteFill,
-  Easing,
-  Img,
-  Interactive,
-  interpolate,
-  useCurrentFrame,
-  useVideoConfig,
-} from "remotion";
+import { AbsoluteFill, Easing, interpolate, useCurrentFrame } from "remotion";
+import confetti from "../audio/confetti.mp3";
+import impact from "../audio/impact.mp3";
+import pop from "../audio/pop.mp3";
+import riser from "../audio/riser.mp3";
 import sparkle from "../audio/sparkle.mp3";
 import whoosh from "../audio/whoosh.mp3";
-import { content, photoSrc, TONES } from "../lib/content";
+import { all, one, useAnimeTimeline } from "../lib/anime";
+import { addBurst, Burst, STAR } from "../lib/Burst";
+import { allPhotos, content, photoSrc, TONES } from "../lib/content";
 import { SANS, SERIF } from "../lib/fonts";
-import { RiseText } from "../lib/RiseText";
+import { usePreloadedImages } from "../lib/preload";
+import { Split } from "../lib/Split";
+import { Sunburst } from "../lib/Sunburst";
+import { BAR, BEAT, ms } from "../timeline";
 
 const tone = TONES.night;
-const [backPage, mainPage, frontPage] = content.hero;
-const SHADOW = "0 32px 64px rgb(10 2 14 / 0.5)";
+const DIGITS = content.year.split("");
+// Each digit first wears one chapter's colour, then becomes a window onto her photos.
+const DIGIT_COLORS = [
+  TONES.night.accent,
+  TONES.bloom.accent,
+  TONES.stone.accent,
+  TONES.gold.accent,
+];
+const PHOTO_URLS = allPhotos.map((photo) => photoSrc(photo.page));
+const [smallLine, ...bigLines] = content.film.opening;
+// Frame 222: everything is pulled into the middle; the music stops at 231.
+const SUCK_IN = 3 * BAR + 2 * BEAT + 12;
+const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 
-// The website's hero, set in motion: three layered photos drift upward at
-// different speeds while her name rises over them.
+// Bars 1 to 4, over the intro stabs: the year slams in a digit per beat, fills
+// with photos that change on every beat, "was a full blast" bounces in and
+// bursts, then the riser pulls everything into one spark before the drop.
 export const Opening: React.FC = () => {
   const frame = useCurrentFrame();
-  const { durationInFrames } = useVideoConfig();
+  usePreloadedImages(PHOTO_URLS);
+
+  const root = useAnimeTimeline((tl, el) => {
+    const digits = all(el, ".digit");
+    digits.forEach((digit, i) => {
+      tl.add(
+        digit,
+        {
+          opacity: [0, 1],
+          scale: [2.8, 1],
+          rotate: [i % 2 ? 24 : -24, 0],
+          y: [-60, 0],
+          duration: 700,
+          ease: "outElastic(1, .55)",
+        },
+        ms(i * BEAT),
+      );
+    });
+    // Once the photos are inside, the digits kick on every beat, left to right.
+    for (let beat = 4; beat < 14; beat++) {
+      tl.add(
+        digits,
+        {
+          scale: [
+            { to: 1.07, duration: 60, ease: "outQuad" },
+            { to: 1, duration: 280, ease: "outQuad" },
+          ],
+        },
+        stagger(25, { start: ms(beat * BEAT) }),
+      );
+    }
+
+    tl.add(
+      all(el, ".small-char"),
+      { opacity: [0, 1], y: [70, 0], duration: 500, ease: "outBack(2)" },
+      stagger(28, { start: ms(2 * BAR) }),
+    );
+    all(el, ".big-line").forEach((line, i) => {
+      tl.add(
+        line.querySelectorAll(".big-char"),
+        i === 0
+          ? {
+              opacity: [0, 1],
+              y: [240, 0],
+              rotate: [-18, 0],
+              duration: 650,
+              ease: "outElastic(1, .6)",
+            }
+          : {
+              opacity: [0, 1],
+              scale: [0, 1],
+              rotate: [-35, 0],
+              duration: 600,
+              ease: "outBack(2.4)",
+            },
+        stagger(i === 0 ? 40 : 35, {
+          start: ms(2 * BAR + (i + 1) * BEAT),
+          from: i === 0 ? "first" : "center",
+        }),
+      );
+    });
+    addBurst(tl, el, "blast", ms(2 * BAR + 2 * BEAT));
+
+    // The big words breathe: their weight dips and springs back on each beat.
+    for (let beat = 11; beat < 15; beat++) {
+      tl.add(
+        all(el, ".big-char"),
+        {
+          fontWeight: [
+            { to: 320, duration: 150, ease: "outQuad" },
+            { to: 900, duration: 300, ease: "outBack(2)" },
+          ],
+        },
+        stagger(22, { start: ms(beat * BEAT) }),
+      );
+    }
+
+    tl.add(
+      one(el, ".stage"),
+      { scale: [1, 0], rotate: [0, 40], duration: ms(13), ease: "inBack(2.2)" },
+      ms(SUCK_IN),
+    );
+    tl.add(
+      one(el, ".spark"),
+      {
+        scale: [
+          { from: 0, to: 1.5, duration: ms(4), ease: "outBack(3)" },
+          { to: 0.8, duration: ms(5), ease: "inOutSine" },
+        ],
+        rotate: [0, 90],
+        duration: ms(9),
+      },
+      ms(SUCK_IN + 9),
+    );
+  });
+
+  // From bar 2, every beat brings four new photos into the digits.
+  const beat = Math.floor((frame - BAR) / BEAT);
+  const photoFor = (i: number) =>
+    PHOTO_URLS[(beat * DIGITS.length + i) % PHOTO_URLS.length];
+  const sinceBeat = frame % BEAT;
 
   return (
-    <AbsoluteFill style={{ backgroundColor: tone.bg, color: tone.ink }}>
-      <Audio src={whoosh} volume={0.55} />
-      <Audio src={sparkle} from={30} />
+    <AbsoluteFill
+      style={{ backgroundColor: tone.bg, color: tone.ink, overflow: "hidden" }}
+    >
+      <Audio src={pop} volume={0.6} />
+      <Audio src={pop} from={BEAT} volume={0.6} />
+      <Audio src={pop} from={2 * BEAT} volume={0.6} />
+      <Audio src={pop} from={3 * BEAT} volume={0.7} />
+      <Audio src={whoosh} from={BAR - 3} volume={0.6} />
+      <Audio src={sparkle} from={BAR} volume={0.6} />
+      <Audio src={pop} from={2 * BAR} volume={0.55} />
+      <Audio src={pop} from={2 * BAR + BEAT} volume={0.6} />
+      <Audio src={impact} from={2 * BAR + 2 * BEAT} volume={0.5} />
+      <Audio src={confetti} from={2 * BAR + 2 * BEAT} volume={0.55} />
+      <Audio src={riser} from={184} volume={0.75} />
 
-      <Interactive.Div
-        name="Back photo"
+      <div
         style={{
           position: "absolute",
-          left: 80,
-          top: 300,
-          width: 300,
-          height: 400,
-          overflow: "hidden",
-          boxShadow: SHADOW,
-          opacity: interpolate(frame, [0, 24], [0, 1], {
-            extrapolateLeft: "clamp",
-            extrapolateRight: "clamp",
-          }),
-          translate: interpolate(
-            frame,
-            [0, 32, durationInFrames],
-            ["0px 80px", "0px 0px", "0px -26px"],
-            {
-              extrapolateLeft: "clamp",
-              extrapolateRight: "clamp",
-              easing: [Easing.bezier(0.16, 1, 0.3, 1), Easing.linear],
-            },
-          ),
+          left: 540,
+          top: 675,
+          opacity: interpolate(frame, [SUCK_IN, SUCK_IN + 12], [0.9, 0], clamp),
+          rotate: `${interpolate(frame, [0, 240], [0, 70], { easing: Easing.in(Easing.quad) })}deg`,
+          scale: 1 + 0.05 * Math.exp(-sinceBeat / 4),
         }}
       >
-        <Img
-          src={photoSrc(backPage)}
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            scale: interpolate(frame, [0, durationInFrames], [1.14, 1], {
-              extrapolateLeft: "clamp",
-              extrapolateRight: "clamp",
-              output: "perceptual-scale",
-            }),
-          }}
-        />
-      </Interactive.Div>
+        <Sunburst color="#33183D" size={2600} rays={20} />
+      </div>
 
-      <Interactive.Div
-        name="Main photo"
+      <div
         style={{
           position: "absolute",
-          left: 280,
-          top: 270,
-          width: 520,
-          height: 693,
-          overflow: "hidden",
-          boxShadow: SHADOW,
-          opacity: interpolate(frame, [5, 29], [0, 1], {
-            extrapolateLeft: "clamp",
-            extrapolateRight: "clamp",
-          }),
-          translate: interpolate(
-            frame,
-            [5, 37, durationInFrames],
-            ["0px 110px", "0px 0px", "0px -52px"],
-            {
-              extrapolateLeft: "clamp",
-              extrapolateRight: "clamp",
-              easing: [Easing.bezier(0.16, 1, 0.3, 1), Easing.linear],
-            },
-          ),
+          inset: 0,
+          scale:
+            interpolate(frame, [3 * BAR, SUCK_IN], [1, 1.1], {
+              ...clamp,
+              easing: Easing.in(Easing.quad),
+            }) + (frame < SUCK_IN ? 0.025 * Math.exp(-sinceBeat / 3) : 0),
         }}
       >
-        <Img
-          src={photoSrc(mainPage)}
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            scale: interpolate(frame, [0, durationInFrames], [1.12, 1], {
-              extrapolateLeft: "clamp",
-              extrapolateRight: "clamp",
-              output: "perceptual-scale",
-            }),
-          }}
-        />
-      </Interactive.Div>
+        <div ref={root} style={{ position: "absolute", inset: 0 }}>
+          <div className="stage" style={{ position: "absolute", inset: 0 }}>
+            <div
+              style={{
+                position: "absolute",
+                left: 0,
+                right: 0,
+                top: 170,
+                textAlign: "center",
+                fontFamily: SANS,
+                fontWeight: 900,
+                fontSize: 390,
+                lineHeight: 0.9,
+                letterSpacing: "-0.05em",
+              }}
+            >
+              {DIGITS.map((digit, i) => {
+                const photo = frame >= BAR;
+                return (
+                  <span
+                    key={i}
+                    className="digit"
+                    style={{
+                      display: "inline-block",
+                      opacity: 0,
+                      padding: "0 0.03em",
+                      color: photo ? "transparent" : DIGIT_COLORS[i],
+                      backgroundImage: photo ? `url(${photoFor(i)})` : "none",
+                      backgroundSize: "cover",
+                      backgroundPosition: "center 28%",
+                      WebkitBackgroundClip: "text",
+                      backgroundClip: "text",
+                      WebkitTextStroke: photo
+                        ? `5px ${DIGIT_COLORS[i]}`
+                        : undefined,
+                    }}
+                  >
+                    {digit}
+                  </span>
+                );
+              })}
+            </div>
 
-      <Interactive.Div
-        name="Front photo"
-        style={{
-          position: "absolute",
-          left: 700,
-          top: 730,
-          width: 300,
-          height: 400,
-          overflow: "hidden",
-          boxShadow: SHADOW,
-          opacity: interpolate(frame, [10, 34], [0, 1], {
-            extrapolateLeft: "clamp",
-            extrapolateRight: "clamp",
-          }),
-          translate: interpolate(
-            frame,
-            [10, 42, durationInFrames],
-            ["0px 150px", "0px 0px", "0px -96px"],
-            {
-              extrapolateLeft: "clamp",
-              extrapolateRight: "clamp",
-              easing: [Easing.bezier(0.16, 1, 0.3, 1), Easing.linear],
-            },
-          ),
-        }}
-      >
-        <Img
-          src={photoSrc(frontPage)}
-          style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            scale: interpolate(frame, [0, durationInFrames], [1.16, 1], {
-              extrapolateLeft: "clamp",
-              extrapolateRight: "clamp",
-              output: "perceptual-scale",
-            }),
-          }}
-        />
-      </Interactive.Div>
+            <div
+              style={{
+                position: "absolute",
+                left: 84,
+                top: 580,
+                fontFamily: SERIF,
+                fontStyle: "italic",
+                fontSize: 120,
+                lineHeight: 1,
+              }}
+            >
+              <Split text={smallLine} className="small-char" />
+            </div>
 
-      <Interactive.Div
-        name="Happy birthday"
-        style={{
-          position: "absolute",
-          top: 130,
-          left: 80,
-          right: 80,
-          margin: 0,
-          textAlign: "center",
-          fontFamily: SERIF,
-          fontStyle: "italic",
-          fontSize: 84,
-          lineHeight: 1,
-          color: tone.accent,
-          translate: interpolate(
-            frame,
-            [0, durationInFrames],
-            ["0px 0px", "0px -18px"],
-            { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
-          ),
-        }}
-      >
-        <RiseText text={content.film.opening} start={16} stagger={4} />
-      </Interactive.Div>
+            {bigLines.map((line, i) => (
+              <div
+                key={line}
+                className="big-line"
+                style={{
+                  position: "absolute",
+                  left: 64,
+                  top: 700 + i * 230,
+                  fontFamily: SANS,
+                  fontWeight: 900,
+                  fontSize: 280,
+                  lineHeight: 0.85,
+                  letterSpacing: "-0.04em",
+                  color: i === bigLines.length - 1 ? tone.accent : tone.ink,
+                }}
+              >
+                <Split
+                  text={line}
+                  className="big-char"
+                  style={{ fontWeight: 900 }}
+                />
+              </div>
+            ))}
 
-      <Interactive.H1
-        name="Name"
-        style={{
-          position: "absolute",
-          top: 820,
-          left: 0,
-          right: 0,
-          margin: 0,
-          textAlign: "center",
-          fontFamily: SERIF,
-          fontWeight: 400,
-          fontSize: 280,
-          lineHeight: 0.8,
-          letterSpacing: "-0.045em",
-          textShadow: "0 0.04em 0.35em rgb(20 4 26 / 0.45)",
-          translate: interpolate(
-            frame,
-            [0, durationInFrames],
-            ["0px 0px", "0px -34px"],
-            { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
-          ),
-        }}
-      >
-        <RiseText
-          text={content.title}
-          start={28}
-          by="letter"
-          stagger={3}
-          duration={26}
-        />
-      </Interactive.H1>
+            <Burst
+              id="blast"
+              x={400}
+              y={1050}
+              count={30}
+              colors={[
+                tone.accent,
+                TONES.bloom.accent,
+                TONES.stone.accent,
+                TONES.gold.accent,
+                tone.ink,
+              ]}
+              spread={520}
+            />
+          </div>
 
-      <Interactive.Div
-        name="Year"
-        style={{
-          position: "absolute",
-          top: 1100,
-          left: 0,
-          right: 0,
-          textAlign: "center",
-          fontFamily: SANS,
-          fontSize: 44,
-          letterSpacing: "0.12em",
-          opacity: interpolate(frame, [52, 72], [0, 1], {
-            extrapolateLeft: "clamp",
-            extrapolateRight: "clamp",
-          }),
-          translate: interpolate(
-            frame,
-            [52, 72, durationInFrames],
-            ["0px 24px", "0px 0px", "0px -34px"],
-            {
-              extrapolateLeft: "clamp",
-              extrapolateRight: "clamp",
-              easing: [Easing.bezier(0.16, 1, 0.3, 1), Easing.linear],
-            },
-          ),
-        }}
-      >
-        {content.year}
-      </Interactive.Div>
+          <svg
+            className="spark"
+            viewBox="-10 -10 20 20"
+            width={120}
+            height={120}
+            style={{
+              position: "absolute",
+              left: 480,
+              top: 615,
+              transform: "scale(0)",
+            }}
+          >
+            <path d={STAR} fill={tone.accent} />
+          </svg>
+        </div>
+      </div>
     </AbsoluteFill>
   );
 };

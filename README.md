@@ -19,7 +19,7 @@ The importer reads the sequence and local timestamp in each filename. It leaves 
 
 ## 2026 gallery
 
-All the words and the photo choices live in `src/gallery-2026.json`: the intro, each chapter's title and message, every photo's caption and description, the film's lines and the closing note. Edit that file and both the page and the film follow. Photos marked `"film": true` also appear in the film. The section colours are in `src/gallery-2026-tones.json`.
+All the words and the photo choices live in `src/gallery-2026.json`: the intro, each chapter's title and message, every photo's caption and description, the film's lines and the closing note. Edit that file and both the page and the film follow. The section colours are in `src/gallery-2026-tones.json`.
 
 To rebuild the photos after changing the selection, install Pillow with WebP support and `pdfimages` (poppler-utils), then run:
 
@@ -31,7 +31,7 @@ The tool takes the listed pages from the PDF, writes a large and a small WebP of
 
 ## 2026 film
 
-The film is a Remotion project in `video/`. It reads the same content file and the photos in `public/media/2026/`. Each scene adds its own sound effects, with the music underneath.
+The film is a Remotion project in `video/`. It reads the same content file and the photos in `public/media/2026/`, and shows all 25 photos. It is cut to a 120 BPM track: every scene starts on a bar and every photo lands on a beat. Remotion keeps time, places the sound and adds the camera motion blur; anime.js does the bouncing letters, staggers, line drawing and the photo heart.
 
 ```
 cd video
@@ -41,6 +41,6 @@ npm run render   # writes public/media/2026/film/fraela-2026.mp4
 npm run poster   # writes public/media/2026/film/fraela-2026-poster.webp
 ```
 
-Scene lengths are in `video/src/timeline.ts`. To use a different song, replace `video/src/audio/bgm.mp3` and render again.
+Scene starts are in `video/src/timeline.ts`, in bars of the music. A new song needs the same tempo and structure (intro to 8 s, a break at 23 s, a last hit at 40 s), or new scene timings.
 
-Sound: the music (`bgm.mp3`) and the whoosh, sparkle and confetti effects were generated for this film with ElevenLabs. The shutter and chime come from Remotion's sound library at remotion.media.
+Sound: the music (`bgm.mp3`) and the impact, pop, riser, cheer, whoosh, sparkle and confetti effects were generated for this film with ElevenLabs. The shutter, chime, whip and paper sounds come from Remotion's sound library at remotion.media.

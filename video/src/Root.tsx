@@ -1,50 +1,47 @@
-import { Audio } from "@remotion/media";
 import React from "react";
-import { Composition, Folder } from "remotion";
-import lifetime from "./audio/lifetime.mp3";
-import { Fraela2026, MUSIC_VOLUME } from "./Fraela2026";
+import { Composition, Folder, Sequence } from "remotion";
+import { FilmMusic, Fraela2026 } from "./Fraela2026";
 import "./lib/fonts";
-import { Bloom } from "./scenes/Bloom";
+import { Fire } from "./scenes/Fire";
 import { Finale } from "./scenes/Finale";
-import { Gold } from "./scenes/Gold";
-import { Mosaic } from "./scenes/Mosaic";
-import { Opening } from "./scenes/Opening";
-import { Stone } from "./scenes/Stone";
-import { White } from "./scenes/White";
-import {
-  FILM_FRAMES,
-  FPS,
-  HEIGHT,
-  MUSIC_START,
-  SCENES,
-  WIDTH,
-} from "./timeline";
+import { Heartbeat } from "./scenes/Heartbeat";
+import { Honor } from "./scenes/Honor";
+import { MadeIt } from "./scenes/MadeIt";
+import { Midnight } from "./scenes/Midnight";
+import { Miles } from "./scenes/Miles";
+import { Moonlight } from "./scenes/Moonlight";
+import { PostcardScene } from "./scenes/PostcardScene";
+import { Sent } from "./scenes/Sent";
+import { FILM_FRAMES, FPS, HEIGHT, SCENES, WIDTH } from "./timeline";
 
 const size = { width: WIDTH, height: HEIGHT, fps: FPS };
 
-// Each scene on its own, with its stretch of the music, for previewing in the Studio.
+// Each scene on its own, with the music it has in the film, for previewing
+// in the Studio. The film's music bed is shifted so the scene's first frame
+// hears what it hears in the film.
 const withMusic = (Scene: React.FC, from: number) => {
   const Preview: React.FC = () => (
     <>
       <Scene />
-      <Audio
-        src={lifetime}
-        trimBefore={MUSIC_START + from}
-        volume={MUSIC_VOLUME}
-      />
+      <Sequence from={-from} layout="none">
+        <FilmMusic />
+      </Sequence>
     </>
   );
   return Preview;
 };
 
 const scenes = [
-  { id: "Opening", Scene: Opening, ...SCENES.opening },
-  { id: "InBloom", Scene: Bloom, ...SCENES.bloom },
-  { id: "SageAndStone", Scene: Stone, ...SCENES.stone },
-  { id: "GoldenNight", Scene: Gold, ...SCENES.gold },
-  { id: "InWhite", Scene: White, ...SCENES.white },
-  { id: "EveryPhoto", Scene: Mosaic, ...SCENES.mosaic },
-  { id: "Wish", Scene: Finale, ...SCENES.finale },
+  { id: "Midnight", Scene: Midnight, ...SCENES.midnight },
+  { id: "Postcard", Scene: PostcardScene, ...SCENES.postcard },
+  { id: "Sent", Scene: Sent, ...SCENES.sent },
+  { id: "Moonlight", Scene: Moonlight, ...SCENES.moonlight },
+  { id: "Heartbeat", Scene: Heartbeat, ...SCENES.heartbeat },
+  { id: "Miles", Scene: Miles, ...SCENES.miles },
+  { id: "Honor", Scene: Honor, ...SCENES.honor },
+  { id: "Fire", Scene: Fire, ...SCENES.fire },
+  { id: "MadeIt", Scene: MadeIt, ...SCENES.madeIt },
+  { id: "Finale", Scene: Finale, ...SCENES.finale },
 ].map((scene) => ({ ...scene, Preview: withMusic(scene.Scene, scene.from) }));
 
 export const RemotionRoot: React.FC = () => {

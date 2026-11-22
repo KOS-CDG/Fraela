@@ -31,7 +31,7 @@ The tool takes the listed pages from the PDF, writes a large and a small WebP of
 
 ## 2026 film
 
-The film is a Remotion project in `video/`. It reads the same content file and the photos in `public/media/2026/`, and shows all 25 photos. It is cut to "Lifetime" by Ben&Ben (90 BPM): every scene starts on a bar of the song and every photo lands on a beat. Remotion keeps time, places the sound and adds the camera motion blur; anime.js does the bouncing letters, staggers, line drawing and the photo heart.
+The film is a Remotion project in `video/`. It reads the same content file and the photos in `public/media/2026/`, plus 17 extra photos from the same shoots that only the film uses (`video/src/photos/`). It is cut to "Last Night on Earth" by Green Day (60 BPM): it opens on a phone at 11:59 that flips to midnight on the song's first chord, follows a postcard through the night, and ends back on the phone at 12:01. Scenes start on bars of the song and the pictures follow what each line sings about, without putting any lyrics on screen. Remotion keeps time and places the sound; anime.js drives the choreography.
 
 ```
 cd video
@@ -41,6 +41,12 @@ npm run render   # writes public/media/2026/film/fraela-2026.mp4
 npm run poster   # writes public/media/2026/film/fraela-2026-poster.webp
 ```
 
-Scene starts are in `video/src/timeline.ts`, in bars of the song: four bars of intro, the band coming in at 10.7 s and the chorus at 48 s. A different song needs new values for `BEAT`, `MUSIC_START` and the scene lengths.
+Scene starts are in `video/src/timeline.ts`, in bars of the song. The film plays the song from its start to the end of the first chorus, then jumps to the last chorus and the outro (see `video/README.md`).
 
-Sound: the music is the first 74 seconds of "Lifetime" by Ben&Ben (`video/src/audio/lifetime.mp3`), a commercial recording used here for a personal gift and not licensed for any other use. The impact, pop, riser, cheer, whoosh, sparkle and confetti effects were generated for this film with ElevenLabs. The shutter, chime, whip and paper sounds come from Remotion's sound library at remotion.media.
+Sound: the music is "Last Night on Earth" by Green Day (`video/src/audio/last-night-*.mp3` and the phone-speaker versions `phone-*.wav`), a commercial recording used here for a personal gift and not licensed for any other use. The fire, crackle, fireworks, sparkler, footstep, impact, pop, riser, whoosh and sparkle effects were generated with ElevenLabs. The heartbeat, phone buzz, screen tap, flip clock, rubber stamp and pen sounds are synthesised by `tools/synth_film_sfx.py`. The shutter, chime, whip and paper sounds come from Remotion's sound library at remotion.media.
+
+The film's extra photos are made from the same PDF:
+
+```
+python3 tools/build_film_photos.py path/to/Fraela_pics_compressed.pdf 140 186 213 410 414 427 439 443 444 448 455 555 565 617 836 867 917
+```

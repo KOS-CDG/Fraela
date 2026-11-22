@@ -204,14 +204,14 @@ export const Honor: React.FC = () => {
                 }}
               >
                 <Img
-                  src={photo(406)}
+                  src={photo(846)}
                   style={{
-                    scale: 1.45,
-                    transformOrigin: "62% 52%",
+                    scale: 1.04,
+                    transformOrigin: "50% 50%",
                     width: "100%",
                     height: "100%",
                     objectFit: "cover",
-                    objectPosition: "center 30%",
+                    objectPosition: "center 45%",
                   }}
                 />
                 <AbsoluteFill

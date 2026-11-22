@@ -207,12 +207,12 @@ export const Finale: React.FC = () => {
                 }}
               >
                 <Img
-                  src={photo(659)}
+                  src={photo(943)}
                   style={{
                     width: "100%",
                     height: "100%",
                     objectFit: "cover",
-                    objectPosition: "center 40%",
+                    objectPosition: "28% 80%",
                   }}
                 />
                 <AbsoluteFill

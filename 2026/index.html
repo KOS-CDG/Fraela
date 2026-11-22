@@ -4,9 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
-  <meta name="theme-color" content="#6C3482">
+  <meta name="theme-color" content="#24102B">
+  <meta name="description" content="The best formal photos of Fraela from 2026, with notes and a short film.">
   <title>2026 · To My Fairest Love</title>
   <link rel="stylesheet" href="./page.css">
+  <script type="module" src="../src/gallery-2026.js"></script>
 </head>
 <body class="story">
   <header class="story-nav">
@@ -16,6 +18,23 @@
     </nav>
     <span>To My Fairest Love</span>
   </header>
-  <main aria-label="2026"></main>
+  <main id="gallery" aria-label="2026">
+    <noscript><p class="noscript">Turn on JavaScript to see the 2026 gallery.</p></noscript>
+  </main>
+  <dialog class="viewer" id="viewer" aria-label="Photo viewer">
+    <figure class="viewer-figure">
+      <img class="viewer-image" id="viewer-image" alt="">
+      <figcaption class="viewer-caption">
+        <span id="viewer-chapter"></span>
+        <span id="viewer-text"></span>
+        <span id="viewer-count"></span>
+      </figcaption>
+    </figure>
+    <div class="viewer-controls">
+      <button type="button" id="viewer-prev">Previous</button>
+      <button type="button" id="viewer-next">Next</button>
+      <button type="button" id="viewer-close">Close</button>
+    </div>
+  </dialog>
 </body>
 </html>

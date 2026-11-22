@@ -1,0 +1,9 @@
+{
+  "night": {"bg": "#24102B", "ink": "#F6E6F6", "accent": "#F0A1B7"},
+  "bloom": {"bg": "#6C3482", "ink": "#FBEFF6", "accent": "#F7C948"},
+  "stone": {"bg": "#463B4D", "ink": "#F3EEF4", "accent": "#C5D59B"},
+  "gold": {"bg": "#1C0C17", "ink": "#F7E9D7", "accent": "#E2BF7A"},
+  "white": {"bg": "#F6E6F6", "ink": "#5B2370", "accent": "#9C2B88"},
+  "film": {"bg": "#2C1236", "ink": "#F6E6F6", "accent": "#DE84A7"},
+  "closing": {"bg": "#F6E6F6", "ink": "#5B2370", "accent": "#C2005F"}
+}

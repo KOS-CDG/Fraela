@@ -68,13 +68,25 @@
   ],
   "film": {
     "title": "The film",
-    "note": "These photographs, set in motion to Lifetime by Ben&Ben. It starts on its own without sound, so press Play with sound to hear it.",
+    "note": "These photographs, set in motion to Last Night on Earth by Green Day. It starts on its own without sound, so press Play with sound to hear it.",
     "src": "fraela-2026.mp4",
     "poster": "fraela-2026-poster.webp",
-    "opening": ["was a", "full", "blast"],
-    "mosaic": ["A thousand photos this year.", "These are the ones I'd frame."],
-    "finale": ["Happy", "birthday,", "my love."],
-    "finaleNote": "Thank you for this year. I can't wait to fill the next album with you."
+    "lockDates": ["Saturday, November 21", "Sunday, November 22"],
+    "notification": ["Postcard", "Happy birthday, my love. Tap to open."],
+    "postcard": {
+      "greeting": "Greetings from 2026",
+      "message": ["Happy birthday,", "my love."],
+      "to": ["Fraela", "Wherever you are tonight"],
+      "postmark": "22 NOV 2026"
+    },
+    "sending": "Sending…",
+    "delivered": "Delivered",
+    "nights": "nights",
+    "steps": "steps away",
+    "portrait": ["Fraela", "Portrait of the year, 2026"],
+    "finale": ["Happy birthday,", "my love."],
+    "signoff": "Always yours",
+    "opened": "Opened just now"
   },
   "closing": {
     "title": "Happy birthday, Fraela",

@@ -1,0 +1,83 @@
+{
+  "title": "Fraela",
+  "year": "2026",
+  "intro": "Happy birthday, my love. Of the thousand photos from this year, these are the ones I would frame. Scroll slowly.",
+  "hero": [210, 406, 755],
+  "chapters": [
+    {
+      "id": "bloom",
+      "numeral": "I",
+      "title": "In bloom",
+      "layout": "collage",
+      "message": "Sunflowers spend their whole lives turning toward the light. Standing next to you, I finally understood them.",
+      "photos": [
+        {"page": 37, "film": false, "caption": "Sunflowers, and the softest smile.", "alt": "Fraela in her school uniform, smiling over a bouquet of sunflowers wrapped in pink paper"},
+        {"page": 138, "film": true, "caption": "Closer. The flowers never stood a chance.", "alt": "Close portrait of Fraela beside a large sunflower bouquet"},
+        {"page": 192, "film": true, "caption": "Arms full of flowers, chocolates and medals. You earned every one.", "alt": "Fraela in her school uniform with medals, holding a box of chocolates and a purple bouquet"},
+        {"page": 630, "film": true, "caption": "Even your school portrait belongs in a frame.", "alt": "Formal school portrait of Fraela in a white blouse, navy vest and red necktie"}
+      ]
+    },
+    {
+      "id": "stone",
+      "numeral": "II",
+      "title": "Sage and stone",
+      "layout": "collage",
+      "message": "Old stone walls and a green dress. Those walls have stood for centuries, and I still think that afternoon was the best thing they have seen.",
+      "photos": [
+        {"page": 198, "film": false, "caption": "Every arch looked better with you in it.", "alt": "Fraela in a sage-green dress standing in a weathered stone archway"},
+        {"page": 210, "film": true, "caption": "Window light, cool stone and you.", "alt": "Fraela in a sage-green dress beside a window in an old stone wall"},
+        {"page": 292, "film": true, "caption": "At the end of the tunnel, there you were.", "alt": "Fraela in a sage-green dress in a brick tunnel lit from behind"},
+        {"page": 294, "film": false, "caption": "Old church, new favorite photo.", "alt": "Fraela in a sage-green dress in front of a centuries-old stone church"},
+        {"page": 311, "film": false, "caption": "A quiet seat under the trees.", "alt": "Fraela in a sage-green dress sitting on a park bench under spreading trees"},
+        {"page": 320, "film": true, "caption": "Cobblestones and a green dress. A postcard I get to keep.", "alt": "Fraela in a sage-green dress on a cobblestone street lined with old houses"}
+      ]
+    },
+    {
+      "id": "gold",
+      "numeral": "III",
+      "title": "Golden night",
+      "layout": "reel",
+      "message": "You wore gold, and the whole city lit up behind you. I have never wanted to stop time so badly.",
+      "photos": [
+        {"page": 396, "film": false, "caption": "Curls, sparkle and that smile.", "alt": "Close portrait of Fraela in a sequined gold gown and a diamond necklace"},
+        {"page": 406, "film": true, "caption": "The curtain call.", "alt": "Fraela in a gold gown and white fur stole, standing before a plum curtain"},
+        {"page": 416, "film": true, "caption": "The skyline came second.", "alt": "Fraela in a gold gown leaning on a terrace railing with the city skyline at night"},
+        {"page": 429, "film": true, "caption": "A look over your shoulder, and I was done for.", "alt": "Fraela in a gold gown looking back over her shoulder in front of a plum curtain"},
+        {"page": 438, "film": false, "caption": "Fit for a portrait hall.", "alt": "Fraela in a gold gown and fur stole seated on a leather sofa"},
+        {"page": 442, "film": false, "caption": "Fur, city lights and steady eyes.", "alt": "Fraela in a gold gown and fur stole on a terrace at night, city lights behind her"},
+        {"page": 459, "film": false, "caption": "Halfway through dinner and still glowing.", "alt": "Close portrait of Fraela in a gold gown at a dinner table"},
+        {"page": 480, "film": false, "caption": "Gold on gold.", "alt": "Fraela in a shimmering gold gown, turned in profile before a dark curtain"},
+        {"page": 659, "film": true, "caption": "Every light in the city, and I only saw you.", "alt": "Fraela in a gold gown and fur stole on a night terrace beneath the skyline"}
+      ]
+    },
+    {
+      "id": "white",
+      "numeral": "IV",
+      "title": "In white",
+      "layout": "collage",
+      "message": "A white dress, a wide blue sky and a garden that went on forever. If anyone asks me what happiness looks like, I will show them this.",
+      "photos": [
+        {"page": 729, "film": false, "caption": "Arms crossed, smile winning anyway.", "alt": "Fraela in a white dress with arms crossed in front of tall bookshelves"},
+        {"page": 744, "film": true, "caption": "Surrounded by stories, and still the best one in the room.", "alt": "Fraela in a white dress smiling beside bookshelves and a framed painting"},
+        {"page": 755, "film": true, "caption": "Waiting at the window.", "alt": "Fraela resting her chin in her hands at an open capiz-shell window"},
+        {"page": 783, "film": false, "caption": "A path lined with flowers, and you at the end of it.", "alt": "Fraela in a white dress on a stone path through a flower garden under a palm tree"},
+        {"page": 805, "film": false, "caption": "Sunlight, shade and you in between.", "alt": "Fraela in a white dress under a wooden garden shelter on a sunny day"},
+        {"page": 820, "film": true, "caption": "Arms open, like the whole garden was yours.", "alt": "Fraela in a white dress with arms open on a garden path under a blue sky"}
+      ]
+    }
+  ],
+  "film": {
+    "title": "The film",
+    "note": "These photographs, set in motion, with music made for your birthday. It starts on its own without sound, so press Play with sound to hear it.",
+    "src": "fraela-2026.mp4",
+    "poster": "fraela-2026-poster.webp",
+    "opening": "Happy birthday",
+    "finale": "Happy birthday, my love.",
+    "finaleNote": "Thank you for this year. I can't wait to fill the next album with you."
+  },
+  "closing": {
+    "title": "Happy birthday, Fraela",
+    "message": "Thank you for this year: for the dressed-up nights, and for the ordinary afternoons that felt just as special. I can't wait to fill the next album with you.",
+    "signoff": "Always yours"
+  }
+}

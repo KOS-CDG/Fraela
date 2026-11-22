@@ -60,7 +60,8 @@ test('home and both year pages lead to the archive', async ({ page }) => {
   for (const year of ['2025', '2026']) {
     const response = await page.goto(`/${year}/`)
     expect(response.ok()).toBe(true)
-    await page.getByRole('link', { name: 'Archive', exact: true }).click()
+    // 2026 also links to the archive again at the end of the page.
+    await page.getByRole('link', { name: 'Archive', exact: true }).first().click()
     await expect(page).toHaveURL('/archive/')
   }
 })

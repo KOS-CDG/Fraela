@@ -31,7 +31,7 @@ The tool takes the listed pages from the PDF, writes a large and a small WebP of
 
 ## 2026 film
 
-The film is a Remotion project in `video/`. It reads the same content file and the photos in `public/media/2026/`, and shows all 25 photos. It is cut to a 120 BPM track: every scene starts on a bar and every photo lands on a beat. Remotion keeps time, places the sound and adds the camera motion blur; anime.js does the bouncing letters, staggers, line drawing and the photo heart.
+The film is a Remotion project in `video/`. It reads the same content file and the photos in `public/media/2026/`, and shows all 25 photos. It is cut to "Lifetime" by Ben&Ben (90 BPM): every scene starts on a bar of the song and every photo lands on a beat. Remotion keeps time, places the sound and adds the camera motion blur; anime.js does the bouncing letters, staggers, line drawing and the photo heart.
 
 ```
 cd video
@@ -41,6 +41,6 @@ npm run render   # writes public/media/2026/film/fraela-2026.mp4
 npm run poster   # writes public/media/2026/film/fraela-2026-poster.webp
 ```
 
-Scene starts are in `video/src/timeline.ts`, in bars of the music. A new song needs the same tempo and structure (intro to 8 s, a break at 23 s, a last hit at 40 s), or new scene timings.
+Scene starts are in `video/src/timeline.ts`, in bars of the song: four bars of intro, the band coming in at 10.7 s and the chorus at 48 s. A different song needs new values for `BEAT`, `MUSIC_START` and the scene lengths.
 
-Sound: the music (`bgm.mp3`) and the impact, pop, riser, cheer, whoosh, sparkle and confetti effects were generated for this film with ElevenLabs. The shutter, chime, whip and paper sounds come from Remotion's sound library at remotion.media.
+Sound: the music is the first 74 seconds of "Lifetime" by Ben&Ben (`video/src/audio/lifetime.mp3`), a commercial recording used here for a personal gift and not licensed for any other use. The impact, pop, riser, cheer, whoosh, sparkle and confetti effects were generated for this film with ElevenLabs. The shutter, chime, whip and paper sounds come from Remotion's sound library at remotion.media.

@@ -27,11 +27,11 @@ const PHOTO_W = 600;
 const PHOTO_H = 800;
 const STEP = PHOTO_W + 90;
 const REEL_TOP = 270;
-// When each photo lands in the middle: every two beats, then every beat.
-const LANDS = [0, 30, 60, 90, 105, 120, 135, 150, 165];
+// The beats on which each photo lands in the middle: every two beats, then every beat.
+const LANDS = [0, 2, 4, 6, 7, 8, 9, 10, 11].map((beat) => beat * BEAT);
 // Frames a whip pan takes.
 const WHIP = 9;
-// The music breaks here, and hits again at FLASH before the chorus.
+// The reel freezes on the song's accent at STOP, and the flash fires a beat later.
 const STOP = 14 * BEAT;
 const FLASH = 15 * BEAT - 1;
 const last = chapter.photos[chapter.photos.length - 1];
@@ -115,7 +115,7 @@ const CORNERS = [
 
 // "Golden night": the page's sideways reel at full speed. Whip pans with real
 // camera motion blur, accelerating from every two beats to every beat, a shine
-// running over the title, then a freeze and a camera flash on the break.
+// running over the title, then a freeze and a camera flash.
 export const Gold: React.FC = () => {
   const frame = useCurrentFrame();
 

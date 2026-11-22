@@ -121,7 +121,7 @@ export const Bloom: React.FC = () => {
     <AbsoluteFill
       style={{ backgroundColor: tone.bg, color: tone.ink, overflow: "hidden" }}
     >
-      <Audio src={impact} volume={0.65} />
+      <Audio src={impact} volume={0.5} />
       <Audio src={whoosh} volume={0.4} />
       <Audio src={sparkle} from={8} volume={0.5} />
       <Audio src={pop} from={2 * BEAT} volume={0.6} />

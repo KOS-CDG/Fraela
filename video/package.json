@@ -33,7 +33,7 @@
   "scripts": {
     "dev": "remotion studio",
     "render": "remotion render Fraela2026 ../public/media/2026/film/fraela-2026.mp4 --crf=24 --x264-preset=slow",
-    "poster": "remotion still Fraela2026 ../public/media/2026/film/fraela-2026-poster.webp --frame=160",
+    "poster": "remotion still Fraela2026 ../public/media/2026/film/fraela-2026-poster.webp --frame=260",
     "build": "remotion bundle",
     "upgrade": "remotion upgrade",
     "lint": "eslint src && tsc"

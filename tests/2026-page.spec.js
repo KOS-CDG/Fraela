@@ -9,10 +9,9 @@ test('the 2026 content lists 25 distinct photos, each with a caption and a descr
   expect(photos).toHaveLength(25)
   expect(new Set(pages).size).toBe(25)
   for (const page of content.hero) expect(pages).toContain(page)
-  for (const chapter of content.chapters) {
-    expect(chapter.message.length, chapter.id).toBeGreaterThan(40)
-    expect(chapter.photos.filter(({ film }) => film).length, chapter.id).toBeGreaterThanOrEqual(3)
-  }
+  for (const chapter of content.chapters) expect(chapter.message.length, chapter.id).toBeGreaterThan(40)
+  // The film animates these line by line, so each is a list of lines.
+  for (const key of ['opening', 'mosaic', 'finale']) expect(content.film[key].length, key).toBeGreaterThan(1)
   for (const photo of photos) {
     expect(photo.caption, String(photo.page)).not.toBe('')
     expect(photo.alt, String(photo.page)).toContain('Fraela')

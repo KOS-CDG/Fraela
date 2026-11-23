@@ -1,6 +1,7 @@
 import { animate, createTimeline, onScroll, splitText, stagger, utils } from 'animejs'
 import content from './gallery-2026.json'
 import sizes from './gallery-2026-photos.json'
+import { renderMonthly2026 } from './monthly-2026.js'
 // Section colours, shared with the film in video/. Each section sets them as it reaches the middle of the screen.
 import TONES from './gallery-2026-tones.json'
 
@@ -107,7 +108,12 @@ function renderHero() {
   filmLink.append(element('span'), document.createTextNode(content.film.title))
   film.append(filmLink)
   index.append(film)
-  foot.append(element('p', 'hero-intro', content.intro), index)
+  const dedication = element('div', 'hero-letter')
+  dedication.append(
+    element('p', 'hero-dedication', content.dedication),
+    element('p', 'hero-intro', content.intro),
+  )
+  foot.append(dedication, index)
   hero.append(stage, foot)
   return hero
 }
@@ -144,9 +150,11 @@ function renderFilm() {
   const title = element('h2', '', content.film.title)
   title.id = 'film-title'
   const note = element('p', '', content.film.note)
+  const actions = element('div', 'film-actions')
   const holder = element('div', 'film-frame')
   const video = element('video')
   video.controls = true
+  video.defaultMuted = true
   video.muted = true
   video.loop = true
   video.playsInline = true
@@ -157,18 +165,115 @@ function renderFilm() {
   source.src = `${FILM}${content.film.src}`
   source.type = 'video/mp4'
   video.append(source)
+
   const sound = element('button', 'film-sound', 'Play with sound')
-  sound.type = 'button'
+  const fullscreen = element('button', 'film-fullscreen', 'Full screen')
+  for (const button of [sound, fullscreen]) button.type = 'button'
+  fullscreen.setAttribute('aria-haspopup', 'dialog')
+  actions.append(sound, fullscreen)
+
+  const dialog = element('dialog', 'film-player')
+  dialog.setAttribute('aria-label', '2026 film player')
+  const surface = element('div', 'film-player-surface')
+  const controls = element('div', 'film-player-controls')
+  const close = element('button', '', 'Close')
+  close.setAttribute('aria-label', 'Close film player')
+  close.autofocus = true
+  const audio = element('button', '', 'Sound on')
+  audio.setAttribute('aria-label', 'Turn on film sound')
+  const fill = element('button', 'film-player-fill', 'Fill screen')
+  fill.setAttribute('aria-pressed', 'false')
+  const native = element('button', '', 'Full screen')
+  native.setAttribute('aria-label', 'Enter native full screen')
+  const play = element('button', 'film-player-play', 'Play film')
+  for (const button of [close, audio, fill, native, play]) button.type = 'button'
+  native.hidden = !document.fullscreenEnabled && !video.webkitEnterFullscreen
+  play.hidden = true
+  controls.append(close, audio, fill, native)
+  surface.append(controls, play)
+  dialog.append(surface)
+
+  let nativeActive = false
+  let canAutoOpen = true
+
+  function startFilm() {
+    video.play().catch(() => {
+      if (dialog.open && video.paused) play.hidden = false
+    })
+  }
+
+  function requestNativeFullscreen() {
+    if (document.fullscreenEnabled && surface.requestFullscreen) {
+      surface.requestFullscreen().catch(() => {})
+    } else if (video.webkitEnterFullscreen) {
+      try { video.webkitEnterFullscreen() } catch {}
+    }
+  }
+
+  function openPlayer(requestNative = false) {
+    if (dialog.open) return
+    canAutoOpen = false
+    play.hidden = true
+    surface.prepend(video)
+    dialog.showModal()
+    document.documentElement.classList.add('film-player-open')
+    if (requestNative) requestNativeFullscreen()
+    startFilm()
+  }
+
+  fullscreen.addEventListener('click', () => openPlayer(true))
+  native.addEventListener('click', requestNativeFullscreen)
+  close.addEventListener('click', () => dialog.close())
+  play.addEventListener('click', startFilm)
+  fill.addEventListener('click', () => {
+    const filled = surface.classList.toggle('film-player-filled')
+    fill.setAttribute('aria-pressed', String(filled))
+  })
   sound.addEventListener('click', () => {
     video.muted = false
     video.currentTime = 0
-    video.play().catch(() => {})
-    sound.hidden = true
+    startFilm()
   })
-  video.addEventListener('volumechange', () => { if (!video.muted) sound.hidden = true })
+  audio.addEventListener('click', () => {
+    video.muted = !video.muted
+    if (video.paused) startFilm()
+  })
+  video.addEventListener('volumechange', () => {
+    sound.hidden = !video.muted
+    audio.textContent = video.muted ? 'Sound on' : 'Mute'
+    audio.setAttribute('aria-label', video.muted ? 'Turn on film sound' : 'Mute film')
+  })
+  video.addEventListener('playing', () => { play.hidden = true })
+  dialog.addEventListener('close', () => {
+    video.pause()
+    if (document.fullscreenElement === surface) document.exitFullscreen().catch(() => {})
+    holder.append(video)
+    document.documentElement.classList.remove('film-player-open')
+  })
+  document.addEventListener('fullscreenchange', () => {
+    const isNative = document.fullscreenElement === surface
+    native.hidden = isNative || (!document.fullscreenEnabled && !video.webkitEnterFullscreen)
+    if (nativeActive && !isNative && dialog.open) dialog.close()
+    nativeActive = isNative
+  })
+  video.addEventListener('webkitendfullscreen', () => {
+    if (dialog.open) dialog.close()
+  })
+
+  const observer = new IntersectionObserver(([entry]) => {
+    if (dialog.open || document.fullscreenElement === video || video.webkitDisplayingFullscreen) return
+
+    if (entry.intersectionRatio < 0.5) {
+      video.pause()
+    } else if (!reduceMotion && canAutoOpen && !document.querySelector('dialog[open]')) {
+      openPlayer()
+    }
+  }, { threshold: 0.5 })
+  observer.observe(holder)
+
   holder.append(video)
-  text.append(title, note, sound)
-  section.append(text, holder)
+  text.append(title, note, actions)
+  section.append(text, holder, dialog)
   return section
 }
 
@@ -248,6 +353,7 @@ viewerImage.addEventListener('pointerup', (event) => {
 const main = document.getElementById('gallery')
 main.replaceChildren(
   renderHero(),
+  renderMonthly2026(),
   ...content.chapters.map(renderChapter),
   renderFilm(),
   renderClosing(),
@@ -276,14 +382,6 @@ for (const section of main.querySelectorAll('[data-tone]')) {
   })
 }
 
-// The film plays silently while it is on screen; the button restarts it with sound.
-const video = main.querySelector('.film video')
-onScroll({
-  target: video,
-  onEnter: () => { if (!reduceMotion || !video.muted) video.play().catch(() => {}) },
-  onLeave: () => video.pause(),
-})
-
 if (!reduceMotion) {
   const scrub = (target, params = {}) => onScroll({ target, sync: true, ...params })
 
@@ -292,7 +390,7 @@ if (!reduceMotion) {
   const name = hero.querySelector('.name')
   const letters = splitText(name, { chars: { wrap: 'clip' } }).chars
   const heroFrames = hero.querySelectorAll('.hero-photo .frame')
-  const heroText = hero.querySelectorAll('.year, .hero-intro, .chapter-index')
+  const heroText = hero.querySelectorAll('.year, .hero-letter, .chapter-index')
   utils.set(letters, { translateY: '105%' })
   utils.set(heroFrames, { opacity: 0, scale: 1.08 })
   utils.set(heroText, { opacity: 0, translateY: '0.75rem' })
@@ -369,13 +467,6 @@ if (!reduceMotion) {
       resizeTimer = setTimeout(() => { size(); glide.refresh() }, 150)
     })
   }
-
-  // The film frame opens up as it arrives.
-  animate(main.querySelector('.film-frame'), {
-    scale: [0.86, 1],
-    ease: 'linear',
-    autoplay: scrub(main.querySelector('.film-frame'), { enter: 'end start', leave: 'center center' }),
-  })
 
   // Closing letter: words brighten in reading order as it scrolls into place.
   const letter = main.querySelector('.closing-message')

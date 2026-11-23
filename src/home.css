@@ -13,10 +13,10 @@
 .edition-nav a:hover { text-decoration: underline; text-underline-offset: 0.2em; }
 .edition-heading p {
   margin: clamp(0.65rem, 2vh, 1.25rem) 0 0.65rem;
-  font-size: 0.69rem;
+  font-size: clamp(0.88rem, 1.4vw, 1.05rem);
   font-weight: 650;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
+  line-height: 1.35;
+  text-wrap: balance;
 }
 .edition-heading h1 {
   margin: 0;

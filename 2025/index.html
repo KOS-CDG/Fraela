@@ -466,6 +466,7 @@
     .memory-photo img { object-fit: contain; }
     :focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
   </style>
+  <script type="module" src="../src/site-soundtrack.js"></script>
 </head>
 <body>
   <div class="bg-blur" aria-hidden="true"></div>
@@ -832,7 +833,7 @@ As thou dost read them, may thy heart feel held and ever bless’d, knowing our 
           }
         });
 
-        for (const media of document.querySelectorAll('audio, video')) {
+        for (const media of archiveMedia) {
           if (!media.closest('.page.active')) media.pause();
         }
 

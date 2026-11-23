@@ -52,15 +52,10 @@ test('2026 shows the hero, four chapters with their messages, the film and the b
   expect(errors).toEqual([])
 })
 
-test('every photo on the page loads', async ({ page }) => {
+test('every photo in the hero and original chapters loads', async ({ page }) => {
   await page.goto('/2026/')
-  const images = page.getByRole('main').locator('img')
+  const images = page.locator('.hero img, .chapter img')
   await expect(images).toHaveCount(photos.length + content.hero.length)
-  // Photos load lazily, so scroll down the whole page first.
-  for (let y = 0; y < (await page.evaluate(() => document.documentElement.scrollHeight)); y += 600) {
-    await page.evaluate((top) => window.scrollTo(0, top), y)
-    await page.waitForTimeout(60)
-  }
   for (const image of await images.all()) {
     await image.scrollIntoViewIfNeeded()
     await expect.poll(() => image.evaluate((img) => img.naturalWidth), { message: await image.getAttribute('src') }).toBeGreaterThan(0)
